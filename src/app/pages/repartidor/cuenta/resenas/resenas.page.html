@@ -1,0 +1,47 @@
+<app-header [backButton]="true"></app-header>
+
+
+<ion-content>
+  <ion-list *ngIf="resenas.length > 0">
+    <ion-list-header>
+      <ion-label>Reseñas</ion-label>
+    </ion-list-header>
+    <ion-item-sliding>
+      <ion-item>
+        <ion-icon slot="end" color="medium" name="chevron-forward"></ion-icon>
+
+        <ion-label>
+          <ion-text color="primary">
+            <h2>Reseña 1</h2>
+          </ion-text>
+          <ion-text color="medium">
+            <p class="detalle">Dirección origen</p>
+            <p class="detalle">Dirección entrega</p>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="borrar()"
+          >Borrar</ion-item-option
+        >
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-card *ngIf="resenas.length === 0">
+    <ion-card-header>
+      <ion-card-title>¡Ups! 😱</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="dark">
+        <p class="info">
+          Parece que aún no tienes reseñas.
+        </p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="crear()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

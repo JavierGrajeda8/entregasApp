@@ -1,0 +1,40 @@
+<app-header></app-header>
+
+<ion-content>
+  <ion-item (click)="irEntregas()" lines="none">
+    <ion-icon size="large" slot="start" color="dark" name="bicycle"></ion-icon>
+    <ion-label >
+      <ion-text color="primary">
+        <h1>Entregas</h1>
+      </ion-text>
+      
+    </ion-label>
+  </ion-item>
+  <ion-item (click)="irCuenta()" lines="none">
+    <ion-icon  size="large" slot="start" color="dark" name="people"></ion-icon>
+    <ion-label >
+      <ion-text color="primary">
+        <h1>Mi cuenta</h1>
+      </ion-text>
+      <ion-text class="ion-text-wrap" color="medium">
+        <p color="medium">
+          Haz cambios en tu información personal para que podamos nosotros y tus solicitantes comunicarnos contigo.
+        </p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+  <ion-item (click)="irResenas()" lines="none">
+    <ion-icon size="large" slot="start" color="dark" name="star"></ion-icon>
+    <ion-label >
+      <ion-text color="primary">
+        <h1>Mis reseñas</h1>
+      </ion-text>
+      <ion-text class="ion-text-wrap" color="medium">
+        <p color="medium">
+          Verifica lo que tus clientes han dicho acerca de ti.
+        </p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+  
+</ion-content>

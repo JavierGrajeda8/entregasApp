@@ -1,0 +1,283 @@
+<app-header [backButton]="true"></app-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Nuevo pedido</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form #form="ngForm">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item-group>
+                <ion-item-divider>
+                  <ion-label>Datos generales</ion-label>
+                </ion-item-divider>
+              </ion-item-group>
+            </ion-col>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label
+                  class="ion-text-wrap"
+                  color="primary"
+                  position="stacked"
+                  >¿A dónde deseas que vayamos por tu pedido?
+                  <ion-text color="danger"> * </ion-text>
+                </ion-label>
+                <ion-select
+                  (ionChange)="calcularCosto()"
+                  [(ngModel)]="data.direccion"
+                  class="ion-text-end"
+                  #direccion="ngModel"
+                  name="direccion"
+                  id="direccion"
+                  required
+                  placeholder="Elige una dirección"
+                >
+                  <span *ngFor="let d of direcciones">
+                    <ion-select-option value="{{d.idDireccion}}"
+                      >{{d.nombre}}</ion-select-option
+                    >
+                  </span>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Detalle de la dirección
+                  ({{data.direccionDetalle.length}}/100):
+                  <ion-text color="danger"> * </ion-text>
+                </ion-label>
+                <ion-textarea
+                  class="ion-text-end"
+                  [(ngModel)]="data.direccionDetalle"
+                  #direccionDetalle="ngModel"
+                  name="direccionDetalle"
+                  id="direccionDetalle"
+                  required
+                  maxlength="100"
+                  placeholder="Ej: 6a calle 9-61 zona 10."
+                ></ion-textarea>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item lines="none" (click)="elegirDestino()">
+                <ion-icon
+                  name="locate-outline"
+                  [color]="data.destino ? 'success' : 'danger'"
+                  slot="end"
+                ></ion-icon>
+                <ion-label class="ion-text-wrap" color="primary"
+                  ><small>
+                    ¿A donde deseas enviar tu pedido?
+                    <ion-text color="danger"> * </ion-text></small
+                  >
+                </ion-label>
+                <ion-input
+                  readonly
+                  placeholder="Elige el destino"
+                  class="ion-text-end"
+                  [(ngModel)]="data.destino"
+                  #destino="ngModel"
+                  name="destino"
+                  id="destino"
+                  type="hidden"
+                  required
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="ion-padding-horizontal ion-align-items-center">
+            <ion-col size="6">
+              <ion-label color="primary" class="ion-text-wrap"
+                ><small>Distancia (Kms):</small></ion-label
+              >
+            </ion-col>
+            <ion-col size="6">
+              <ion-input
+                class="ion-text-end ion-padding-horizontal"
+                [(ngModel)]="data.distancia"
+                #distancia="ngModel"
+                name="distancia"
+                id="distancia"
+                readonly
+                placeholder="0"
+                type="text"
+              ></ion-input>
+            </ion-col>
+            <ion-col size="6">
+              <ion-label color="primary" class="ion-text-wrap"
+                ><small>Costo (Q):</small></ion-label
+              >
+            </ion-col>
+            <ion-col size="6">
+              <ion-input
+                class="ion-text-end ion-padding-horizontal"
+                [(ngModel)]="data.costo"
+                #costo="ngModel"
+                name="costo"
+                id="costo"
+                readonly
+                placeholder="0.00"
+                type="text"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Elige un repartidor:
+                  <ion-text color="danger"> * </ion-text>
+                </ion-label>
+                <ion-select
+                  class="ion-text-end"
+                  [(ngModel)]="data.repartidor"
+                  #repartidor="ngModel"
+                  name="repartidor"
+                  id="repartidor"
+                  required
+                  placeholder="Elige un repartidor"
+                >
+                  <ion-select-option value="0"
+                    >Asignar automáticamente</ion-select-option
+                  >
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Para entregar el:
+                  <ion-text color="danger"> * </ion-text>
+                </ion-label>
+                <ion-datetime
+                  class="ion-text-end"
+                  [(ngModel)]="data.fechaEntrega"
+                  #fechaEntrega="ngModel"
+                  name="fechaEntrega"
+                  id="fechaEntrega"
+                  [min]="availableDateMin"
+                  [max]="availableDateMax"
+                  minuteValues="0,15,30,45"
+                  display-format="DD.MM.YYYY HH:mm"
+                  placeholder="Elige una fecha y hora"
+                ></ion-datetime>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Descripción del envío ({{data.descripcion.length}}/300):
+                  <ion-text color="danger"> * </ion-text>
+                </ion-label>
+                <ion-textarea
+                  class="ion-text-end"
+                  [(ngModel)]="data.descripcion"
+                  #descripcion="ngModel"
+                  name="descripcion"
+                  id="descripcion"
+                  required
+                  maxlength="300"
+                  placeholder="Ej: artículos electrónicos varios y documentos."
+                ></ion-textarea>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Comentarios al repartidor
+                  ({{data.comentarios.length}}/150):</ion-label
+                >
+                <ion-textarea
+                  class="ion-text-end"
+                  [(ngModel)]="data.comentarios"
+                  #comentarios="ngModel"
+                  name="comentarios"
+                  id="comentarios"
+                  maxlength="150"
+                  placeholder="Ej: Contenido frágil por favor extremar precauciones"
+                ></ion-textarea>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="data.detalle.length > 0">
+            <ion-col size="12">
+              <ion-item-group>
+                <ion-item-divider>
+                  <ion-label>Detalle</ion-label>
+                </ion-item-divider>
+              </ion-item-group>
+            </ion-col>
+
+            <ion-col *ngFor="let d of data.detalle" size="12">
+              <ion-item lines="none">
+                <ion-icon
+                  color="danger"
+                  name="trash"
+                  slot="end"
+                  (click)="eliminarDetalle(d)"
+                ></ion-icon>
+                <ion-label>
+                  <b>{{d.detalle}} </b><br />
+                  <small>Cantidad: {{d.cantidad}}</small>
+                </ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-end">
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-button
+                  slot="end"
+                  (click)="agregarDetalle()"
+                  color="secondary"
+                >
+                  <ion-icon slot="start" fill="clear" name="add"></ion-icon>
+                  Agregar detalle
+                </ion-button>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button
+                (click)="cancelar()"
+                color="medium"
+                expand="block"
+                fill="clear"
+                shape="round"
+              >
+                Cancelar
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button
+                [disabled]="!form.valid"
+                (click)="guardarPedido()"
+                expand="block"
+                shape="round"
+              >
+                Guardar
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

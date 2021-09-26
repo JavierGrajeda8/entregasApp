@@ -1,0 +1,7 @@
+{
+  "name": "EntregaApp",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

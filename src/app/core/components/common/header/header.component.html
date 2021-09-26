@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      <ion-icon *ngIf="backButton"
+        (click)="back()"
+        color="primary"
+        slot="icon-only"
+        name="chevron-back"
+      ></ion-icon>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Entregas App</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon
+        (click)="logOff()"
+        color="danger"
+        slot="icon-only"
+        name="power"
+      ></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>

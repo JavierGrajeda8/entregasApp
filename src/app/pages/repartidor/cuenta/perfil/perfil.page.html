@@ -1,0 +1,140 @@
+<app-header [backButton]="true"></app-header>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Perfil de repartidor</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form #form="ngForm">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item>
+                <ion-label>Editar</ion-label>
+                <ion-toggle
+                  [(ngModel)]="data.editando"
+                  #editando="ngModel"
+                  name="editando"
+                  id="editando"
+                  slot="end"
+                ></ion-toggle>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Nombre
+                  <span *ngIf="data.editando">({{data.nombre.length}}/100)</span
+                  >:
+                  <ion-text color="danger" *ngIf="data.editando"> * </ion-text>
+                </ion-label>
+                <ion-input
+                  class="ion-text-end"
+                  [(ngModel)]="data.nombre"
+                  #nombre="ngModel"
+                  name="nombre"
+                  id="nombre"
+                  required
+                  maxlength="100"
+                  [readonly]="!data.editando"
+                  placeholder="Jose Morales"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Teléfono:
+                  <ion-text color="danger" *ngIf="data.editando"> * </ion-text>
+                </ion-label>
+                <ion-input
+                  class="ion-text-end"
+                  [(ngModel)]="data.telefono"
+                  #telefono="ngModel"
+                  name="telefono"
+                  id="telefono"
+                  required
+                  [readonly]="!data.editando"
+                  type="number"
+                  placeholder="54136611"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Correo:
+                </ion-label>
+                <ion-input
+                  class="ion-text-end"
+                  [(ngModel)]="data.correo"
+                  #correo="ngModel"
+                  name="correo"
+                  id="correo"
+                  required
+                  readonly
+                  type="text"
+                  placeholder="corre@gmail.com"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Cantidad de entregas:
+                </ion-label>
+                <ion-input
+                  class="ion-text-end"
+                  [(ngModel)]="data.cantidadEntregas"
+                  #cantidadEntregas="ngModel"
+                  name="cantidadEntregas"
+                  id="cantidadEntregas"
+                  required
+                  readonly
+                  type="text"
+                  placeholder="10"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-button
+                *ngIf="data.editando"
+                (click)="cancelar()"
+                color="danger"
+                expand="block"
+                fill="clear"
+                shape="round"
+              >
+                Cancelar
+              </ion-button>
+              <ion-button
+                *ngIf="!data.editando"
+                (click)="regresar()"
+                color="medium"
+                expand="block"
+                fill="clear"
+                shape="round"
+              >
+                Regresar
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button
+                *ngIf="data.editando"
+                [disabled]="!form.valid"
+                (click)="guardar()"
+                color="primary"
+                expand="block"
+                shape="round"
+              >
+                Guardar
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

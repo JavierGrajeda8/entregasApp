@@ -1,0 +1,44 @@
+<div style="background-color: white; border-radius: 10px; margin-top: 30px">
+  <form #form="ngForm">
+    <ion-grid fixed>
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="ion-text-center" size="12">
+          <ion-text color="primary">
+            <h3>¿Cómo te pareció el servicio?</h3>
+          </ion-text>
+        </ion-col>
+        <ion-col class="ion-text-center ion-padding-vertical" size="12">
+          <ion-icon size="large" color="warning" [name]="data.valor >= 1 ? 'star' : 'star-outline'" (click)="valorar(1)"></ion-icon>
+          &nbsp;&nbsp;
+          <ion-icon size="large" color="warning" [name]="data.valor >= 2 ? 'star' : 'star-outline'" (click)="valorar(2)"></ion-icon>
+          &nbsp;&nbsp;
+          <ion-icon size="large" color="warning" [name]="data.valor >= 3 ? 'star' : 'star-outline'" (click)="valorar(3)"></ion-icon>
+          &nbsp;&nbsp;
+          <ion-icon size="large" color="warning" [name]="data.valor >= 4 ? 'star' : 'star-outline'" (click)="valorar(4)"></ion-icon>
+          &nbsp;&nbsp;
+          <ion-icon size="large" color="warning" [name]="data.valor >= 5 ? 'star' : 'star-outline'" (click)="valorar(5)"></ion-icon>
+        </ion-col>
+        <ion-col class="ion-padding-vertical" size="12">
+          <ion-item lines="none">
+            <ion-label color="primary" position="stacked">Comentarios ({{ data.comentarios.length }}/150):</ion-label>
+            <ion-textarea
+              class="ion-text-end"
+              [(ngModel)]="data.comentarios"
+              #comentarios="ngModel"
+              name="comentarios"
+              id="comentarios"
+              maxlength="150"
+              placeholder="Ej: Excelente atención, rápido, gracias"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6" class="ion-padding-vertical">
+          <ion-button (click)="cancelar()" expand="block" color="red" fill="clear" shape="round"> Cancelar </ion-button>
+        </ion-col>
+        <ion-col size="6" class="ion-padding-vertical">
+          <ion-button (click)="guardar()" expand="block" color="primary" shape="round"> Guardar </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</div>

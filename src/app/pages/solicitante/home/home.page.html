@@ -1,0 +1,46 @@
+<app-header></app-header>
+
+
+<ion-content>
+  <ion-item (click)="irPedidos()" lines="none">
+    <ion-icon size="large" slot="start" color="dark" name="document-text"></ion-icon>
+    <ion-label >
+      <ion-text color="primary">
+        <h1>Pedidos</h1>
+      </ion-text>
+      <ion-text class="ion-text-wrap" color="medium">
+        <p color="medium">
+          Gestiona tus pedidos, créalos o haz el seguimiento de un pedido
+          pendiente
+        </p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+  <ion-item (click)="irCuenta()" lines="none">
+    <ion-icon  size="large" slot="start" color="dark" name="people"></ion-icon>
+    <ion-label >
+      <ion-text color="primary">
+        <h1>Mi cuenta</h1>
+      </ion-text>
+      <ion-text class="ion-text-wrap" color="medium">
+        <p color="medium">
+          Haz cambios en tu información personal para podernos comunicar contigo
+        </p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+  <ion-item (click)="irDirecciones()" lines="none">
+    <ion-icon size="large" slot="start" color="dark" name="map"></ion-icon>
+    <ion-label >
+      <ion-text color="primary">
+        <h1>Mis direcciones</h1>
+      </ion-text>
+      <ion-text class="ion-text-wrap" color="medium">
+        <p color="medium">
+          Agrega, edita o elimina tus direcciones a donde deseas que vayamos por tus pedidos
+        </p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+  
+</ion-content>

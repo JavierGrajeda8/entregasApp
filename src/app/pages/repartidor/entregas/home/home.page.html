@@ -1,0 +1,25 @@
+<app-header [backButton]="true"></app-header>
+<ion-content>
+  <ion-item (click)="pedidosPendientes()" lines="none">
+    <ion-icon size="large" slot="start" color="dark" name="time"></ion-icon>
+    <ion-label>
+      <ion-text color="primary">
+        <h1>Entregas pendientes</h1>
+      </ion-text>
+      <ion-text class="ion-text-wrap" color="medium">
+        <p color="medium">Da seguimiento a un pedido pendiente de entrega</p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+  <ion-item (click)="pedidosHistoricos()" lines="none">
+    <ion-icon size="large" slot="start" color="dark" name="calendar"></ion-icon>
+    <ion-label>
+      <ion-text color="primary">
+        <h1>Histórico de entregas</h1>
+      </ion-text>
+      <ion-text class="ion-text-wrap" color="medium">
+        <p color="medium">Verifica los pedidos que haz hecho</p>
+      </ion-text>
+    </ion-label>
+  </ion-item>
+</ion-content>
