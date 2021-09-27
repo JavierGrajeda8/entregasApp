@@ -14,7 +14,7 @@ export class MapaComponent implements OnInit {
   @ViewChild('map', { static: false }) mapElement: ElementRef;
 
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  apiKey: string = 'AIzaSyCLqb2hUwWbTHyarOVO_AmqCAyYJjVS7jk';
+  apiKey: string = 'AIzaSyCCtejiJvqg3n0Xf76CDhJQ7lCoOLz1iY0';
   myCoordinates: any;
   position: any;
   map: any;
