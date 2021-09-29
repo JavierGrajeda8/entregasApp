@@ -11,7 +11,7 @@ export class ResenaComponent implements OnInit {
     valor: 5,
     comentarios: '',
   };
-  editando = false;
+  private editando = false;
 
   constructor(private modalCtrl: ModalController, private navParams: NavParams) {
     if (this.navParams.get('editando')) {
@@ -21,17 +21,17 @@ export class ResenaComponent implements OnInit {
 
   ngOnInit() {}
 
-  valorar(valor) {
+  private valorar(valor) {
     if (this.editando) {
       this.data.valor = valor;
     }
   }
 
-  guardar() {
+  private guardar() {
     this.modalCtrl.dismiss({ valoracion: this.data.valor, comentarios: this.data.comentarios });
   }
 
-  cancelar() {
+  private cancelar() {
     this.modalCtrl.dismiss();
   }
 }

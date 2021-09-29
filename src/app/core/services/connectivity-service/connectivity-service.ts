@@ -4,7 +4,7 @@ import { Platform } from '@ionic/angular';
 
 @Injectable({ providedIn: 'root' })
 export class ConnectivityServiceProvider {
-  onDevice: boolean;
+  private onDevice: boolean;
 
   constructor(public platform: Platform, public network: Network) {
     this.onDevice = this.platform.is('cordova');
@@ -18,7 +18,7 @@ export class ConnectivityServiceProvider {
     }
   }
 
-  isOffline(): boolean {
+  private isOffline(): boolean {
     if (this.onDevice && this.network.type) {
       return this.network.type === 'none';
     } else {

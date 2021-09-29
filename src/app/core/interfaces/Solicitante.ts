@@ -6,5 +6,6 @@ export interface Solicitante {
     telefono: number;
     correo: string;
     idEstado: number;
-    direccion: Direccion[];
+    direccion?: Direccion[];
+    password?: string;
 }

@@ -16,7 +16,6 @@ import { Pedido } from 'src/app/core/interfaces/Pedido';
   styleUrls: ['./crear.page.scss'],
 })
 export class CrearPage implements OnInit {
-  costoPorKilometro = 10.0;
   public availableDateMin;
   public availableDateMax;
   public data = {
@@ -34,7 +33,8 @@ export class CrearPage implements OnInit {
     ],
   };
 
-  direcciones: Direccion[] = [];
+  private direcciones: Direccion[] = [];
+  private costoPorKilometro = 10.0;
 
   constructor(
     private alertController: AlertController,
@@ -45,105 +45,6 @@ export class CrearPage implements OnInit {
   ngOnInit() {
     this.setDates();
     this.cargarDirecciones();
-  }
-
-  cargarDirecciones() {
-    /*
-      PRUEBAS ELIMINAR
-    */
-    this.direcciones.push({
-      idDireccion: 1,
-      idSolicitante: null,
-      latitud: 14.586966584775903,
-      longitud: -90.50186538045654,
-      direccion: '6a calle 9-61',
-      nombre: 'Casa Principal',
-      tipo: null,
-      idEstado: null,
-    });
-
-    /*
-      PRUEBAS ELIMINAR
-    */
-  }
-
-  guardarPedido() {
-    console.log(this.data);
-
-    const pedido: Pedido = {
-      idPedido: now(),
-      idRepartidor: parseInt(this.data.repartidor, 10),
-      idSolicitante: 0,
-      direccionDetalle: this.data.direccionDetalle,
-      descripcion: this.data.descripcion,
-      comentarios: this.data.comentarios,
-      costo: this.data.costo,
-      latitud: parseFloat(this.data.destino.split(',')[0]),
-      longitud: parseFloat(this.data.destino.split(',')[1]),
-      idEstado: ConstStatus.pedidoRealizado,
-      pedidoDetalle: [],
-    };
-
-    this.data.detalle.forEach((d) => {
-      pedido.pedidoDetalle.push({
-        idPedidoDetalle: parseInt(d.id, 10),
-        idPedido: pedido.idPedido,
-        detalle: d.detalle,
-        cantidad: d.cantidad,
-        idEstado: ConstStatus.activo,
-      });
-    });
-    console.log('Información a grabar', pedido);
-  }
-
-  calcularCosto() {
-    if (this.data.direccion && this.data.destino) {
-      const direccionOrigen = this.direcciones.find(
-        (d) => (d.idDireccion = parseInt(this.data.direccion, 10))
-      );
-      if (direccionOrigen) {
-        console.log('direccionOrigen', direccionOrigen);
-        const direccionDestino = {
-          latitud: parseFloat(this.data.destino.split(',')[0]),
-          longitud: parseFloat(this.data.destino.split(',')[1]),
-        };
-        const distancia = this.distanceInKmBetweenEarthCoordinates(
-          direccionOrigen.latitud,
-          direccionOrigen.longitud,
-          direccionDestino.latitud,
-          direccionDestino.longitud
-        );
-        console.log('distancia', distancia);
-        this.data.distancia = distancia.toFixed(2);
-        this.data.costo = (distancia * this.costoPorKilometro).toFixed(2);
-
-        return this.data.costo;
-      } else {
-        return (0.0).toFixed(2);
-      }
-    } else {
-      return (0.0).toFixed(2);
-    }
-  }
-
-  degreesToRadians(degrees) {
-    return (degrees * Math.PI) / 180;
-  }
-
-  distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
-    const earthRadiusKm = 6371;
-
-    const dLat = this.degreesToRadians(lat2 - lat1);
-    const dLon = this.degreesToRadians(lon2 - lon1);
-
-    lat1 = this.degreesToRadians(lat1);
-    lat2 = this.degreesToRadians(lat2);
-
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return earthRadiusKm * c;
   }
 
   async agregarDetalle() {
@@ -258,11 +159,110 @@ export class CrearPage implements OnInit {
     mapaModal.present();
   }
 
-  cancelar() {
+  private cargarDirecciones() {
+    /*
+      PRUEBAS ELIMINAR
+    */
+    this.direcciones.push({
+      idDireccion: 1,
+      idSolicitante: null,
+      latitud: 14.586966584775903,
+      longitud: -90.50186538045654,
+      direccion: '6a calle 9-61',
+      nombre: 'Casa Principal',
+      tipo: null,
+      idEstado: null,
+    });
+
+    /*
+      PRUEBAS ELIMINAR
+    */
+  }
+
+  private guardarPedido() {
+    console.log(this.data);
+
+    const pedido: Pedido = {
+      idPedido: now(),
+      idRepartidor: parseInt(this.data.repartidor, 10),
+      idSolicitante: 0,
+      direccionDetalle: this.data.direccionDetalle,
+      descripcion: this.data.descripcion,
+      comentarios: this.data.comentarios,
+      costo: this.data.costo,
+      latitud: parseFloat(this.data.destino.split(',')[0]),
+      longitud: parseFloat(this.data.destino.split(',')[1]),
+      idEstado: ConstStatus.pedidoRealizado,
+      pedidoDetalle: [],
+    };
+
+    this.data.detalle.forEach((d) => {
+      pedido.pedidoDetalle.push({
+        idPedidoDetalle: parseInt(d.id, 10),
+        idPedido: pedido.idPedido,
+        detalle: d.detalle,
+        cantidad: d.cantidad,
+        idEstado: ConstStatus.activo,
+      });
+    });
+    console.log('Información a grabar', pedido);
+  }
+
+  private calcularCosto() {
+    if (this.data.direccion && this.data.destino) {
+      const direccionOrigen = this.direcciones.find(
+        (d) => (d.idDireccion = parseInt(this.data.direccion, 10))
+      );
+      if (direccionOrigen) {
+        console.log('direccionOrigen', direccionOrigen);
+        const direccionDestino = {
+          latitud: parseFloat(this.data.destino.split(',')[0]),
+          longitud: parseFloat(this.data.destino.split(',')[1]),
+        };
+        const distancia = this.distanceInKmBetweenEarthCoordinates(
+          direccionOrigen.latitud,
+          direccionOrigen.longitud,
+          direccionDestino.latitud,
+          direccionDestino.longitud
+        );
+        console.log('distancia', distancia);
+        this.data.distancia = distancia.toFixed(2);
+        this.data.costo = (distancia * this.costoPorKilometro).toFixed(2);
+
+        return this.data.costo;
+      } else {
+        return (0.0).toFixed(2);
+      }
+    } else {
+      return (0.0).toFixed(2);
+    }
+  }
+
+  private degreesToRadians(degrees) {
+    return (degrees * Math.PI) / 180;
+  }
+
+  private distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+    const earthRadiusKm = 6371;
+
+    const dLat = this.degreesToRadians(lat2 - lat1);
+    const dLon = this.degreesToRadians(lon2 - lon1);
+
+    lat1 = this.degreesToRadians(lat1);
+    lat2 = this.degreesToRadians(lat2);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return earthRadiusKm * c;
+  }
+
+  private cancelar() {
     this.navCtrl.pop();
   }
 
-  setDates() {
+  private setDates() {
     let fechaAux = new Date();
     fechaAux = new Date(
       fechaAux.getFullYear(),

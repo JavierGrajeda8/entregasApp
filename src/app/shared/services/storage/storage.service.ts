@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Subject, Observable } from 'rxjs';
-import { isObject } from 'util';
 
 @Injectable({
   providedIn: 'root',

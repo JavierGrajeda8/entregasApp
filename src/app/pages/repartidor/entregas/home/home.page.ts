@@ -13,10 +13,10 @@ export class HomePage implements OnInit {
   ngOnInit() {
   }
 
-  pedidosPendientes() {
+  private pedidosPendientes() {
     this.nav.navigateForward('repartidor/entregas/pendientes');
   }
-  pedidosHistoricos() {
+  private pedidosHistoricos() {
     this.nav.navigateForward('repartidor/entregas/historico');
   }
 }

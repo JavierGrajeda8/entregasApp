@@ -37,7 +37,7 @@ export class PendientesPage implements OnInit {
     detalle.present();
   }
 
-  crear() {
+  private crear() {
     this.nav.navigateForward('solicitante/pedidos/crear');
   }
 }

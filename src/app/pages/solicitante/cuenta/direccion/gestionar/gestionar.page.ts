@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, NavParams } from '@ionic/angular';
 import { MapaComponent } from 'src/app/core/components/mapa/mapa.component';
 import { ConstStatus } from 'src/app/core/constants/constStatus';
+import { ConstStrings } from 'src/app/core/constants/constStrings';
+import { Direccion } from 'src/app/core/interfaces/Direccion';
+import { Solicitante } from 'src/app/core/interfaces/Solicitante';
+import { SolicitanteService } from 'src/app/core/services/solicitante/solicitante.service';
+import { StorageService } from 'src/app/shared/services/storage/storage.service';
 
 @Component({
   selector: 'app-gestionar',
@@ -18,13 +23,27 @@ export class GestionarPage implements OnInit {
     idDireccion: null,
   };
 
-  constructor(private navCtrl: NavController, private modalCtrl: ModalController, private navParams: NavParams) {
-    if (this.navParams.get('IdDireccion')){
+  private solicitante: Solicitante;
+
+  constructor(
+    private navCtrl: NavController,
+    private modalCtrl: ModalController,
+    private navParams: NavParams,
+    private storage: StorageService,
+    private solicitanteService: SolicitanteService
+  ) {
+    if (this.navParams.get('IdDireccion')) {
       this.data.idDireccion = this.navParams.get('IdDireccion');
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.storage
+      .get(ConstStrings.str.storage.solicitante)
+      .then((solicitante: string) => {
+        this.solicitante = JSON.parse(solicitante) as Solicitante;
+      });
+  }
 
   async elegirDestino() {
     let lat = 0.0;
@@ -41,30 +60,36 @@ export class GestionarPage implements OnInit {
       if (data.data) {
         console.log(data);
         this.data.latitud = parseFloat(data.data.latitud).toFixed(6).toString();
-        this.data.longitud = parseFloat(data.data.longitud).toFixed(6).toString();
+        this.data.longitud = parseFloat(data.data.longitud)
+          .toFixed(6)
+          .toString();
       }
     });
     mapaModal.present();
   }
 
-  guardar() {
-    if (!this.data.idDireccion){
+  private guardar() {
+    if (!this.data.idDireccion) {
       this.data.idDireccion = Date.now();
     }
-    const pedido = {
+    const direccion: Direccion = {
       idDireccion: this.data.idDireccion,
-      idSolicitante: null,
+      idSolicitante: this.solicitante.idSolicitante,
       latitud: this.data.latitud,
       longitud: this.data.longitud,
       direccion: this.data.direccion,
       nombre: this.data.nombre,
       tipo: null,
       idEstado: ConstStatus.activo,
-      repartidor: null,
     };
+    this.solicitanteService
+      .setDireccion(direccion, this.solicitante.correo)
+      .then(() => {
+        this.navCtrl.pop();
+      });
   }
 
-  cancelar() {
+  private cancelar() {
     this.navCtrl.pop();
   }
 }

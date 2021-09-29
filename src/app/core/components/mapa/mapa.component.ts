@@ -11,20 +11,20 @@ declare let google;
   styleUrls: ['./mapa.component.scss'],
 })
 export class MapaComponent implements OnInit {
-  @ViewChild('map', { static: false }) mapElement: ElementRef;
+  @ViewChild('map', { static: false }) private mapElement: ElementRef;
 
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
-  apiKey: string = 'AIzaSyCCtejiJvqg3n0Xf76CDhJQ7lCoOLz1iY0';
-  myCoordinates: any;
-  position: any;
-  map: any;
-  markers: any = [];
-  script: any;
-  mapInitialised = false;
-  lat = 0.0;
-  lng = 0.0;
+  private apiKey: string = 'AIzaSyCCtejiJvqg3n0Xf76CDhJQ7lCoOLz1iY0';
+  private myCoordinates: any;
+  private position: any;
+  private map: any;
+  private markers: any = [];
+  private script: any;
+  private mapInitialised = false;
+  private lat = 0.0;
+  private lng = 0.0;
 
-  loading: any;
+  private loading: any;
 
   constructor(
     private geolocation: Geolocation,
@@ -75,15 +75,15 @@ export class MapaComponent implements OnInit {
     }
   }
 
-  disableMap() {}
+  private disableMap() {}
 
-  initMap() {
+  private initMap() {
     console.log('initMap');
     this.mapInitialised = true;
     this.myGeolocation();
   }
 
-  addConnectivityListeners() {
+  private addConnectivityListeners() {
     const onOnline = () => {
       setTimeout(() => {
         if (typeof google == 'undefined' || typeof google.maps == 'undefined') {
@@ -102,7 +102,7 @@ export class MapaComponent implements OnInit {
     document.addEventListener('offline', onOffline, false);
   }
 
-  myGeolocation() {
+  private myGeolocation() {
     const GPS_OPTIONS = { timeout: 10000 };
     this.geolocation.getCurrentPosition(GPS_OPTIONS).then(
       (position) => {
@@ -169,7 +169,7 @@ export class MapaComponent implements OnInit {
     );
   }
 
-  addMarker(latLng: any, item: any, soyYo: boolean, isTomaTurno?: boolean) {
+  private addMarker(latLng: any, item: any, soyYo: boolean, isTomaTurno?: boolean) {
     const image = {
       url: 'assets/img/ubicaciones/ubicacion1.png',
       // This marker is 20 pixels wide by 32 pixels high.
@@ -259,7 +259,7 @@ export class MapaComponent implements OnInit {
     await this.loading.present();
   }
 
-  loaderSimple() {
+  private loaderSimple() {
     this.loaderCon('');
   }
 
@@ -269,11 +269,11 @@ export class MapaComponent implements OnInit {
     }
   }
 
-  cancelar() {
+  private cancelar() {
     this.modalCtrl.dismiss();
   }
 
-  elegir() {
+  private elegir() {
     this.modalCtrl.dismiss({ latitud: this.map.center.lat(), longitud: this.map.center.lng() });
   }
 }

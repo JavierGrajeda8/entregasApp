@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from '@ionic/angular';
+import { ConstStatus } from 'src/app/core/constants/constStatus';
+import { Solicitante } from 'src/app/core/interfaces/Solicitante';
+import { SolicitanteService } from 'src/app/core/services/solicitante/solicitante.service';
 import { environment } from 'src/environments/environment.prod';
+import { StorageService } from 'src/app/shared/services/storage/storage.service';
+import { ConstStrings } from 'src/app/core/constants/constStrings';
 
 @Component({
   selector: 'app-registro',
@@ -16,20 +21,43 @@ export class RegistroPage implements OnInit {
     password: '',
     rePassword: '',
   };
-  constructor(private nav: NavController) {}
+  public mensaje = '';
+  constructor(
+    private nav: NavController,
+    private solicitanteService: SolicitanteService,
+    private storage: StorageService
+  ) {}
 
   ngOnInit() {}
 
-  validarCorreo() {
+  private validarCorreo() {
     const regex = new RegExp(environment.ReExMail);
     this.data.correoValido = regex.test(this.data.correo);
   }
 
-  registrar() {}
-  login() {
+  private registrar() {
+    this.mensaje = '';
+    const solicitante: Solicitante = {
+      nombre: this.data.nombre,
+      correo: this.data.correo,
+      password: this.data.password,
+      idEstado: ConstStatus.activo,
+      telefono: this.data.telefono,
+      idSolicitante: Date.now(),
+    };
+    this.solicitanteService
+      .registrar(solicitante)
+      .then(() => {
+        this.nav.navigateRoot('solicitante');
+      })
+      .catch((error) => {
+        this.mensaje = error;
+      });
+  }
+  private login() {
     this.nav.navigateRoot('login');
   }
-  registroRepartidor() {
+  private registroRepartidor() {
     this.nav.navigateRoot('login/registroRepartidor');
   }
 }

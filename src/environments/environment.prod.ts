@@ -1,13 +1,13 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: 'AIzaSyCCtejiJvqg3n0Xf76CDhJQ7lCoOLz1iY0',
-    authDomain: 'ingresapp-jg.firebaseapp.com',
-    databaseURL: 'https://ingresapp-jg.firebaseio.com',
-    projectId: 'ingresapp-jg',
-    storageBucket: 'ingresapp-jg.appspot.com',
-    messagingSenderId: '327251504047',
-    appId: '1:327251504047:web:7946057a40aee3412f9d5a',
+    apiKey: 'AIzaSyDhQrQCy1mjJaCYHBSWM1eqo0ivry4slow',
+    authDomain: 'entregasapp-d3883.firebaseapp.com',
+    projectId: 'entregasapp-d3883',
+    storageBucket: 'entregasapp-d3883.appspot.com',
+    messagingSenderId: '344985409523',
+    appId: '1:344985409523:web:c12b24a6609e09875fe486',
+    measurementId: 'G-HRWGRT8ZZC',
   },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ReExSpaces: new RegExp(/[a-zA-Z ]*[^\s]+/),

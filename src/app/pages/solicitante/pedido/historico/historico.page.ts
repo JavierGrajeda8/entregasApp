@@ -27,7 +27,7 @@ export class HistoricoPage implements OnInit {
     resenaModal.present();
   }
 
-  crear() {
+  private crear() {
     this.nav.navigateForward('solicitante/pedidos/crear');
   }
 }

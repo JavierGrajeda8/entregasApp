@@ -11,14 +11,14 @@ export class HomePage implements OnInit {
 
   ngOnInit() {}
 
-  irEntregas() {
+  private irEntregas() {
     this.nav.navigateForward('repartidor/entregas');
   }
-  irCuenta() {
+  private irCuenta() {
     this.nav.navigateForward('repartidor/perfil');
 
   }
-  irResenas() {
+  private irResenas() {
     this.nav.navigateForward('repartidor/resenas');
 
   }
