@@ -10,6 +10,8 @@ import {
 import { Repartidor } from '../../interfaces/Repartidor';
 import { Pedido } from '../../interfaces/Pedido';
 import { ConstStatus } from '../../constants/constStatus';
+import { CommonService } from '../common/common.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +20,76 @@ export class RepartidorService {
   constructor(
     private firestore: AngularFirestore,
     private auth: AuthService,
-    private storage: StorageService
+    private storage: StorageService,
+    private commonService: CommonService
   ) {}
+
+  guardarPerfil(repartidor: Repartidor) {
+    return new Promise((resolve, reject) => {
+      this.firestore
+        .collection('repartidor')
+        .doc(repartidor.correo)
+        .set(repartidor)
+        .then(() => {
+          resolve('');
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  resena(pedido: Pedido) {
+    this.firestore
+      .collection('repartidor')
+      .doc(pedido.idRepartidor)
+      .collection('resena')
+      .doc(pedido.resena.idRepartidorResena.toString())
+      .set(pedido.resena);
+    this.firestore
+      .collection('repartidor')
+      .doc(pedido.idRepartidor)
+      .collection('entrega')
+      .doc(pedido.idPedido.toString())
+      .set(pedido);
+    this.firestore
+      .collection('solicitante')
+      .doc(pedido.idSolicitante)
+      .collection('pedido')
+      .doc(pedido.idPedido.toString())
+      .set(pedido);
+  }
+
+  nextStep(pedido: Pedido, cancelar: boolean, comentarios: string = '') {
+    if (cancelar) {
+      pedido.idEstado = ConstStatus.pedidoCancelado;
+    } else {
+      pedido.idEstado = this.commonService.nextStepInt(pedido.idEstado);
+    }
+    if (!pedido.historico) {
+      pedido.historico = [];
+    }
+    pedido.historico.push({
+      idHistorico: Date.now(),
+      idPedido: pedido.idPedido,
+      idEstado: pedido.idEstado,
+      comentarios: '',
+      fechaHora: Date.now(),
+    });
+    console.log('pedido', pedido);
+    this.firestore
+      .collection('repartidor')
+      .doc(pedido.idRepartidor)
+      .collection('entrega')
+      .doc(pedido.idPedido.toString())
+      .set(pedido);
+    this.firestore
+      .collection('solicitante')
+      .doc(pedido.idSolicitante)
+      .collection('pedido')
+      .doc(pedido.idPedido.toString())
+      .set(pedido);
+  }
 
   registrar(repartidor: Repartidor) {
     return new Promise((resolve, reject) => {
@@ -48,6 +118,25 @@ export class RepartidorService {
     });
   }
 
+  getResenas(idRepartidor) {
+    return this.firestore
+      .collection('repartidor')
+      .doc(idRepartidor)
+      .collection('resena')
+      .get()
+      .toPromise();
+  }
+
+  getPedidosHistoricos(idRepartidor) {
+    return this.firestore
+      .collection('repartidor')
+      .doc(idRepartidor)
+      .collection('entrega', (ref) =>
+        ref.where('idEstado', '==', ConstStatus.pedidoEntregado)
+      )
+      .valueChanges();
+  }
+
   getPedidosPendientes(idRepartidor) {
     return this.firestore
       .collection('repartidor')
@@ -60,7 +149,7 @@ export class RepartidorService {
       .valueChanges();
   }
 
-  guardarEntrega(pedido: Pedido){
+  guardarEntrega(pedido: Pedido) {
     return new Promise((resolve, reject) => {
       this.firestore
         .collection('repartidor')

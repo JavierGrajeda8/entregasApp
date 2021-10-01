@@ -10,4 +10,10 @@ export namespace ConstStatus {
   export const pedidoEntregado = 8;
   export const pedidoCancelado = 88;
   export const eliminado = 99;
+  export const pedidoRealizadoStr = 'Realizado';
+  export const pedidoConfirmadoStr = 'Confirmar';
+  export const pedidoPorRecogerStr = 'Iniciar';
+  export const pedidoEsperandoStr = 'Ya estoy aquí';
+  export const pedidoEnTransitoStr = 'En tránsito';
+  export const pedidoEntregadoStr = 'Entregado';
 }

@@ -35,11 +35,11 @@
                   required
                   placeholder="Elige una dirección"
                 >
-                  <span *ngFor="let d of direcciones">
-                    <ion-select-option value="{{d.idDireccion}}"
-                      >{{d.nombre}}</ion-select-option
-                    >
-                  </span>
+                  <ion-select-option
+                    *ngFor="let d of direcciones"
+                    value="{{d.idDireccion}}"
+                    >{{d.nombre}}</ion-select-option
+                  >
                 </ion-select>
               </ion-item>
             </ion-col>
@@ -141,6 +141,7 @@
                 </ion-label>
                 <ion-select
                   class="ion-text-end"
+                  (ionChange)="elegirRepartidor()"
                   [(ngModel)]="data.repartidor"
                   #repartidor="ngModel"
                   name="repartidor"
@@ -273,7 +274,6 @@
             </ion-col>
             <ion-col size="6">
               <ion-button
-                [disabled]="!form.valid"
                 (click)="guardarPedido()"
                 expand="block"
                 shape="round"

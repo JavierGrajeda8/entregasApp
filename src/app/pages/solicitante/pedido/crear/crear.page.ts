@@ -3,6 +3,7 @@ import {
   AlertController,
   ModalController,
   NavController,
+  ToastController,
 } from '@ionic/angular';
 import { now } from 'moment';
 import { MapaComponent } from 'src/app/core/components/mapa/mapa.component';
@@ -27,17 +28,16 @@ export class CrearPage implements OnInit {
   public data = {
     idPedido: null,
     direccion: null,
-    direccionDetalle: '6a calle 9-61',
+    direccionDetalle: '',
     destino: null,
     fechaEntrega: '',
-    descripcion: 'Exámenes médicos Javier Grajeda',
+    descripcion: '',
     costo: null,
     distancia: null,
     comentarios: '',
     repartidor: '',
-    detalle: [
-      { detalle: 'Caja de zapatos', cantidad: '1', id: '1632378600000' },
-    ],
+    repartidorAux: '',
+    detalle: [],
   };
   public cargando = false;
   public solicitante: Solicitante;
@@ -52,7 +52,8 @@ export class CrearPage implements OnInit {
     private navCtrl: NavController,
     private storage: StorageService,
     private solicitanteService: SolicitanteService,
-    private repartidorService: RepartidorService
+    private repartidorService: RepartidorService,
+    private toastController: ToastController
   ) {}
 
   ngOnInit() {
@@ -149,6 +150,22 @@ export class CrearPage implements OnInit {
     await alert.present();
   }
 
+  elegirRepartidor() {
+    if (this.data.repartidor === '0') {
+      const cantidad = this.repartidores.length;
+      const rnd = parseInt((Math.random() * 100).toFixed(0), 10);
+      const asignacion = rnd % cantidad;
+      console.log('cantidad', cantidad);
+      console.log('rnd', rnd);
+      console.log('asignacion', asignacion);
+      console.log(this.repartidores[asignacion]);
+      this.data.repartidorAux = this.repartidores[asignacion].correo;
+      console.log('repartidor', this.data.repartidorAux);
+    } else {
+      this.data.repartidorAux = this.data.repartidor;
+    }
+  }
+
   async elegirDestino() {
     let lat = 0.0;
     let lng = 0.0;
@@ -182,6 +199,9 @@ export class CrearPage implements OnInit {
           this.repartidores.push(repartidor.data() as Repartidor);
         });
         console.log('repartidores', this.repartidores);
+        this.repartidores = this.repartidores.sort((a, b) =>
+          b.nombre < a.nombre ? 1 : -1
+        );
       })
       .catch((error) => {
         console.log('error', error);
@@ -202,10 +222,15 @@ export class CrearPage implements OnInit {
             if (direcciones.size > 0) {
               direcciones.docs.forEach((direccion) => {
                 const dir: Direccion = direccion.data();
+                console.log('direccion', dir);
                 if (dir.idEstado === ConstStatus.activo) {
                   this.direcciones.push(direccion.data());
                 }
               });
+              this.direcciones = this.direcciones.sort((a, b) =>
+                b.nombre < a.nombre ? 1 : -1
+              );
+
               console.log('direcciones', this.direcciones);
             }
           })
@@ -216,17 +241,17 @@ export class CrearPage implements OnInit {
   }
 
   private guardarPedido() {
+    const fecha = new Date(this.data.fechaEntrega);
     if (!this.data.idPedido) {
       this.data.idPedido = Date.now();
     }
-    const direccion = this.direcciones.filter(
+    const direccion = this.direcciones.find(
       (r) => r.idDireccion === parseInt(this.data.direccion, 10)
     );
 
-    const repartidor = this.repartidores.filter(
-      (r) => r.correo === this.data.repartidor
+    const repartidor = this.repartidores.find(
+      (r) => r.correo === this.data.repartidorAux
     );
-    console.log('repartidor', repartidor);
 
     const pedido: Pedido = {
       idPedido: this.data.idPedido,
@@ -236,12 +261,13 @@ export class CrearPage implements OnInit {
       descripcion: this.data.descripcion,
       comentarios: this.data.comentarios,
       costo: this.data.costo,
+      fechaEntrega: fecha.setSeconds(0, 0),
       latitud: parseFloat(this.data.destino.split(',')[0]),
       longitud: parseFloat(this.data.destino.split(',')[1]),
       idEstado: ConstStatus.pedidoRealizado,
       pedidoDetalle: [],
-      repartidor: repartidor[0],
-      direccion: direccion[0],
+      repartidor,
+      direccion,
     };
 
     this.data.detalle.forEach((d) => {
@@ -257,20 +283,29 @@ export class CrearPage implements OnInit {
 
     this.solicitanteService.guardarPedido(pedido).then(() => {
       this.repartidorService.guardarEntrega(pedido).then(() => {
-        this.navCtrl.pop().then(() => {
-          this.navCtrl.navigateForward('solicitante/pedidos/pendientes');
+        this.navCtrl.pop().then(async () => {
+          const toast = await this.toastController.create({
+            header: 'Pedido creado',
+            message: 'Número ' + pedido.idPedido,
+            animated: true,
+            position: 'middle',
+            color: 'success',
+            duration: 5000,
+          });
+          toast.present();
+          this.navCtrl.navigateForward('solicitante/pedidos');
         });
       });
     });
   }
 
   private calcularCosto() {
+    console.log('distancia', this.direcciones);
     if (this.data.direccion && this.data.destino) {
       const direccionOrigen = this.direcciones.find(
-        (d) => (d.idDireccion = parseInt(this.data.direccion, 10))
+        (d) => d.idDireccion === parseInt(this.data.direccion, 10)
       );
       if (direccionOrigen) {
-        console.log('direccionOrigen', direccionOrigen);
         const direccionDestino = {
           latitud: parseFloat(this.data.destino.split(',')[0]),
           longitud: parseFloat(this.data.destino.split(',')[1]),
@@ -281,9 +316,9 @@ export class CrearPage implements OnInit {
           direccionDestino.latitud,
           direccionDestino.longitud
         );
-        console.log('distancia', distancia);
         this.data.distancia = distancia.toFixed(2);
         this.data.costo = (distancia * this.costoPorKilometro).toFixed(2);
+        console.log('distancia', this.direcciones);
 
         return this.data.costo;
       } else {

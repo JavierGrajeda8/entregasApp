@@ -25,6 +25,21 @@ export class SolicitanteService {
     private storage: StorageService
   ) {}
 
+  guardarPerfil(solicitante: Solicitante) {
+    return new Promise((resolve, reject) => {
+      this.firestore
+        .collection('solicitante')
+        .doc(solicitante.correo)
+        .set(solicitante)
+        .then(() => {
+          resolve('');
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
   login(correo, password) {
     return new Promise((resolve, reject) => {
       this.auth

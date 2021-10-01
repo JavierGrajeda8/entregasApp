@@ -35,9 +35,11 @@ export class AuthService {
 
   public registerWithEmail(email, password): Promise<any> {
     return new Promise((resolve0, reject) => {
-      this.angularFireAuth.createUserWithEmailAndPassword(email, password).then((result) => {
-        resolve0(result);
-      });
+      this.angularFireAuth
+        .createUserWithEmailAndPassword(email, password)
+        .then((result) => {
+          resolve0(result);
+        });
     });
   }
 
@@ -84,7 +86,8 @@ export class AuthService {
       this.angularFireAuth
         .signOut()
         .then(() => {
-          this.storage.remove(ConstStrings.str.storage.user).then(() => {
+          this.storage.remove(ConstStrings.str.storage.repartidor);
+          this.storage.remove(ConstStrings.str.storage.solicitante).then(() => {
             resolve('');
           });
         })

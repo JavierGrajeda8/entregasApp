@@ -17,6 +17,10 @@
             <p class="detalle2">Desde: <b>{{pedido.direccion.nombre}}</b></p>
             <p class="detalle2">Hacia: <b>{{pedido.direccionDetalle}}</b></p>
             <p class="detalle2">
+              Fecha entrega:
+              <b>{{pedido.fechaEntrega | date:'dd/MM/yy hh:mm a' }}</b>
+            </p>
+            <p class="detalle2">
               Precio: <b>{{pedido.costo | currency:'Q'}}</b>
             </p>
             <p class="detalle2">Descripción <b>{{pedido.descripcion}}</b></p>
@@ -27,8 +31,11 @@
         </ion-label>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="borrar()"
-          >Borrar</ion-item-option
+        <ion-item-option
+          *ngIf="pedido.idEstado === 3"
+          color="danger"
+          (click)="borrar(pedido)"
+          >Cancelar</ion-item-option
         >
       </ion-item-options>
     </ion-item-sliding>

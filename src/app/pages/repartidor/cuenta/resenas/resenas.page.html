@@ -1,47 +1,136 @@
 <app-header [backButton]="true"></app-header>
 
-
 <ion-content>
-  <ion-list *ngIf="resenas.length > 0">
+  <ion-list *ngIf="resenas.length > 0 && !cargando">
     <ion-list-header>
       <ion-label>Reseñas</ion-label>
     </ion-list-header>
     <ion-item-sliding>
-      <ion-item>
-        <ion-icon slot="end" color="medium" name="chevron-forward"></ion-icon>
-
+      <ion-item *ngFor="let resena of resenas">
         <ion-label>
           <ion-text color="primary">
-            <h2>Reseña 1</h2>
+            <h2>Pedido {{resena.idPedido}}</h2>
           </ion-text>
-          <ion-text color="medium">
-            <p class="detalle">Dirección origen</p>
-            <p class="detalle">Dirección entrega</p>
+          <ion-text class="ion-text-wrap" color="medium">
+            <p class="detalle">Comentarios: {{resena.comentario}}</p>
           </ion-text>
         </ion-label>
+        <ion-icon
+          size="small"
+          color="warning"
+          [name]="resena.valoracion >= 1 ? 'star' : 'star-outline'"
+        ></ion-icon>
+        &nbsp;&nbsp;
+        <ion-icon
+          size="small"
+          color="warning"
+          [name]="resena.valoracion >= 2 ? 'star' : 'star-outline'"
+        ></ion-icon>
+        &nbsp;&nbsp;
+        <ion-icon
+          size="small"
+          color="warning"
+          [name]="resena.valoracion >= 3 ? 'star' : 'star-outline'"
+        ></ion-icon>
+        &nbsp;&nbsp;
+        <ion-icon
+          size="small"
+          color="warning"
+          [name]="resena.valoracion >= 4 ? 'star' : 'star-outline'"
+        ></ion-icon>
+        &nbsp;&nbsp;
+        <ion-icon
+          size="small"
+          color="warning"
+          [name]="resena.valoracion >= 5 ? 'star' : 'star-outline'"
+        ></ion-icon>
       </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="borrar()"
-          >Borrar</ion-item-option
-        >
-      </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-  <ion-card *ngIf="resenas.length === 0">
+  <ion-card *ngIf="resenas.length === 0 && !cargando">
     <ion-card-header>
       <ion-card-title>¡Ups! 😱</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-text color="dark">
-        <p class="info">
-          Parece que aún no tienes reseñas.
-        </p>
+        <p class="info">Parece que aún no tienes reseñas.</p>
       </ion-text>
     </ion-card-content>
   </ion-card>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="crear()">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <ion-list *ngIf="cargando">
+    <ion-list-header>
+      <ion-label>
+        <ion-skeleton-text
+          animated
+          style="width: 35%; height: 20px"
+        ></ion-skeleton-text>
+      </ion-label>
+    </ion-list-header>
+    <ion-item>
+      <ion-icon slot="end" color="light" name="chevron-forward"></ion-icon>
+      <ion-label>
+        <ion-skeleton-text
+          animated
+          style="width: 75%; height: 18; padding-bottom: 5px"
+        ></ion-skeleton-text>
+        <ion-skeleton-text
+          animated
+          style="width: 45%; height: 16px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+    </ion-item>
+    <ion-item>
+      <ion-icon slot="end" color="light" name="chevron-forward"></ion-icon>
+      <ion-label>
+        <ion-skeleton-text
+          animated
+          style="width: 75%; height: 18; padding-bottom: 5px"
+        ></ion-skeleton-text>
+        <ion-skeleton-text
+          animated
+          style="width: 45%; height: 16px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+    </ion-item>
+    <ion-item>
+      <ion-icon slot="end" color="light" name="chevron-forward"></ion-icon>
+      <ion-label>
+        <ion-skeleton-text
+          animated
+          style="width: 75%; height: 18; padding-bottom: 5px"
+        ></ion-skeleton-text>
+        <ion-skeleton-text
+          animated
+          style="width: 45%; height: 16px"
+        ></ion-skeleton-text>
+      </ion-label>
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+      &nbsp;&nbsp;
+      <ion-icon size="small" color="light" [name]="'star'"></ion-icon>
+    </ion-item>
+  </ion-list>
 </ion-content>

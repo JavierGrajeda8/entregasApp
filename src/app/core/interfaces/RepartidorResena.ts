@@ -2,7 +2,8 @@ import { Repartidor } from './Repartidor';
 
 export interface RepartidorResena {
     idRepartidorResena: number;
-    idRepartidor: number;
+    idRepartidor: string;
+    idPedido: number;
     valoracion: number;
     comentario: string;
     fechaHora: number;

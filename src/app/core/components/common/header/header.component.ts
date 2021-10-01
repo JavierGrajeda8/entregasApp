@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -9,7 +10,7 @@ import { AlertController, NavController } from '@ionic/angular';
 export class HeaderComponent implements OnInit {
   @Input() backButton = false;
 
-  constructor(private nav: NavController, private alertCtrl: AlertController) {
+  constructor(private nav: NavController, private alertCtrl: AlertController, private auth: AuthService) {
     console.log('backbutton', this.backButton);
   }
 
@@ -35,7 +36,9 @@ export class HeaderComponent implements OnInit {
           text: 'Cerrar sesión',
           cssClass: 'danger',
           handler: () => {
-            console.log('Confirm Okay');
+            this.auth.logOut().then(()=> {
+              this.nav.navigateRoot('');
+            });
           }
         }
       ]
