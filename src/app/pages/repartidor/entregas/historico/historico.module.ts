@@ -8,6 +8,7 @@ import { HistoricoPageRoutingModule } from './historico-routing.module';
 
 import { HistoricoPage } from './historico.page';
 import { ComponentsModule } from 'src/app/core/components/components.module';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @NgModule({
   imports: [
@@ -18,5 +19,7 @@ import { ComponentsModule } from 'src/app/core/components/components.module';
     ComponentsModule,
   ],
   declarations: [HistoricoPage],
+  providers: [Geolocation]
+
 })
 export class HistoricoPageModule {}

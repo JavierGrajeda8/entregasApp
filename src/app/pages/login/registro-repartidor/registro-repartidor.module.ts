@@ -7,14 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { RegistroRepartidorPageRoutingModule } from './registro-repartidor-routing.module';
 
 import { RegistroRepartidorPage } from './registro-repartidor.page';
+import { ComponentsModule } from 'src/app/core/components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RegistroRepartidorPageRoutingModule
+    RegistroRepartidorPageRoutingModule,
+    ComponentsModule,
   ],
-  declarations: [RegistroRepartidorPage]
+  declarations: [RegistroRepartidorPage],
 })
 export class RegistroRepartidorPageModule {}

@@ -155,7 +155,7 @@ export class MapaComponent implements OnInit {
   private initMap() {
     console.log('initMap');
     this.mapInitialised = true;
-    if (this.seguimiento && this.solicitante) {
+    if (this.seguimiento && this.solicitante || this.seguimiento && !this.solicitante) {
       setTimeout(() => {
         this.seguimientoPedido();
       }, 1500);
@@ -208,7 +208,7 @@ export class MapaComponent implements OnInit {
             this.initMap();
           }
         }
-      }, 2000);
+      }, 500);
     };
     const onOffline = () => {
       this.disableMap();

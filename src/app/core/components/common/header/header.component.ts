@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
 })
 export class HeaderComponent implements OnInit {
   @Input() backButton = false;
+  @Input() logged = true;
 
   constructor(private nav: NavController, private alertCtrl: AlertController, private auth: AuthService) {
     console.log('backbutton', this.backButton);
