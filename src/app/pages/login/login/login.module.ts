@@ -8,6 +8,7 @@ import { LoginPageRoutingModule } from './login-routing.module';
 
 import { LoginPage } from './login.page';
 import { ComponentsModule } from 'src/app/core/components/components.module';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @NgModule({
   imports: [
@@ -15,8 +16,9 @@ import { ComponentsModule } from 'src/app/core/components/components.module';
     FormsModule,
     IonicModule,
     LoginPageRoutingModule,
-    ComponentsModule
+    ComponentsModule,
   ],
-  declarations: [LoginPage]
+  declarations: [LoginPage],
+  providers: [Geolocation],
 })
 export class LoginPageModule {}

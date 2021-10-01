@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NavController } from '@ionic/angular';
 import { SolicitanteService } from 'src/app/core/services/solicitante/solicitante.service';
 
@@ -15,10 +16,14 @@ export class LoginPage implements OnInit {
   public mensaje = null;
   constructor(
     private nav: NavController,
-    private solicianteService: SolicitanteService
+    private solicianteService: SolicitanteService,
+    private geolocation: Geolocation
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    const GPS_OPTIONS = { timeout: 10000 };
+    this.geolocation.getCurrentPosition(GPS_OPTIONS);
+  }
 
   private ingresar() {
     this.solicianteService

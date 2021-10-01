@@ -86,6 +86,9 @@
       "cordova-plugin-ionic-webview": {
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
+      "cordova-plugin-geolocation": {
+        "GPS_REQUIRED": "true"
+      },
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-network-information": {},
       "cordova-sqlite-storage": {}
