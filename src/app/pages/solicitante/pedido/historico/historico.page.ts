@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
+import { PedidoDetalleComponent } from 'src/app/core/components/pedido-detalle/pedido-detalle.component';
 import { ResenaComponent } from 'src/app/core/components/resena/resena.component';
+import { ConstStrings } from 'src/app/core/constants/constStrings';
 import { Pedido } from 'src/app/core/interfaces/Pedido';
+import { Solicitante } from 'src/app/core/interfaces/Solicitante';
+import { SolicitanteService } from 'src/app/core/services/solicitante/solicitante.service';
+import { StorageService } from 'src/app/shared/services/storage/storage.service';
 
 @Component({
   selector: 'app-historico',
@@ -9,22 +14,49 @@ import { Pedido } from 'src/app/core/interfaces/Pedido';
   styleUrls: ['./historico.page.scss'],
 })
 export class HistoricoPage implements OnInit {
+  private solicitante: Solicitante;
   private pedidos: Pedido[] = [];
-  constructor(private modalCtrl: ModalController, private nav: NavController) {}
+  constructor(
+    private modalCtrl: ModalController,
+    private nav: NavController,
+    private solicitanteService: SolicitanteService,
+    private storage: StorageService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.storage
+      .get(ConstStrings.str.storage.solicitante)
+      .then((solicitante: string) => {
+        this.solicitante = JSON.parse(solicitante) as Solicitante;
+        this.getPedidosPendientes();
+      });
+  }
 
   async test() {
-    const resenaModal = await this.modalCtrl.create({
+    const detalle = await this.modalCtrl.create({
       component: ResenaComponent,
-      componentProps: { editando: true },
     });
-    resenaModal.onDidDismiss().then((data) => {
-      if (data.data) {
-        console.log(data);
-      }
+
+    detalle.present();
+  }
+
+  getPedidosPendientes() {
+    const subscription = this.solicitanteService.getpedidosHistorico(
+      this.solicitante.idSolicitante
+    );
+    subscription.subscribe((pedidos) => {
+      console.log(pedidos);
+      this.pedidos = pedidos as Pedido[];
     });
-    resenaModal.present();
+  }
+
+  async mostrarDetalle(pedido: Pedido) {
+    const detalle = await this.modalCtrl.create({
+      component: PedidoDetalleComponent,
+      componentProps: { idPedido: pedido.idPedido },
+    });
+
+    detalle.present();
   }
 
   private crear() {

@@ -1,21 +1,26 @@
-<app-header (click)="test()" [backButton]="true"></app-header>
+<app-header  [backButton]="true"></app-header>
 
 <ion-content>
   <ion-list *ngIf="pedidos.length > 0">
     <ion-list-header>
-      <ion-label>Pedidos pendientes</ion-label>
+      <ion-label>Pedidos históricos</ion-label>
     </ion-list-header>
-    <ion-item-sliding>
-      <ion-item>
+    <ion-item-sliding *ngFor="let pedido of pedidos">
+      <ion-item (click)="mostrarDetalle(pedido)">
         <ion-icon slot="end" color="medium" name="chevron-forward"></ion-icon>
 
         <ion-label>
           <ion-text color="primary">
-            <h2>Pedido 1</h2>
+            <h2>Pedido {{pedido.idPedido}}</h2>
           </ion-text>
           <ion-text color="medium">
-            <p class="detalle">Dirección origen</p>
-            <p class="detalle">Dirección entrega</p>
+            <p class="detalle">Desde: <b>{{pedido.direccion.nombre}}</b></p>
+            <p class="detalle">Hacia: <b>{{pedido.direccionDetalle}}</b></p>
+            <p class="detalle">
+              Precio: <b>{{pedido.costo | currency:'Q'}}</b>
+            </p>
+            <p class="detalle">Descripción <b>{{pedido.descripcion}}</b></p>
+            <p class="detalle">Fecha entregado <b>{{pedido.idPedido | date:'d/M/yy'}}</b></p>
           </ion-text>
         </ion-label>
       </ion-item>
@@ -33,7 +38,7 @@
     <ion-card-content>
       <ion-text color="dark">
         <p class="info">
-          Parece que no tienes pedidos históricos, crea un pedido
+          Parece que no tienes pedidos pendientes, crea un pedido
           <ion-text color="primary" (click)="crear()"> aquí </ion-text>
         </p>
       </ion-text>

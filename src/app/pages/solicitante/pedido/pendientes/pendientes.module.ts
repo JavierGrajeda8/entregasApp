@@ -9,6 +9,7 @@ import { PendientesPageRoutingModule } from './pendientes-routing.module';
 import { PendientesPage } from './pendientes.page';
 import { ComponentsModule } from 'src/app/core/components/components.module';
 import { PedidoDetalleComponent } from 'src/app/core/components/pedido-detalle/pedido-detalle.component';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @NgModule({
   imports: [
@@ -20,5 +21,6 @@ import { PedidoDetalleComponent } from 'src/app/core/components/pedido-detalle/p
   ],
   declarations: [PendientesPage],
   entryComponents: [PedidoDetalleComponent],
+  providers: [Geolocation]
 })
 export class PendientesPageModule {}

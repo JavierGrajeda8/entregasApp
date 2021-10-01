@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController, NavParams } from '@ionic/angular';
 import { Pedido } from '../../interfaces/Pedido';
+import { MapaComponent } from '../mapa/mapa.component';
 
 @Component({
   selector: 'app-pedido-detalle',
@@ -8,73 +10,35 @@ import { Pedido } from '../../interfaces/Pedido';
 })
 export class PedidoDetalleComponent implements OnInit {
   public pedido: Pedido;
-  constructor() {}
+  private solicitante = true;
+  constructor(
+    private navParams: NavParams,
+    private modalCtrl: ModalController
+  ) {}
 
   ngOnInit() {
-    this.pedido = {
-      idPedido: 1,
-      idRepartidor: 1,
-      idSolicitante: 1,
-      direccionDetalle: 'string',
-      descripcion: 'string',
-      comentarios: 'string',
-      costo: 0.0,
-      latitud: 0,
-      longitud: 0,
-      idEstado: 5,
-      repartidor: {
-        idRepartidor: 0,
-        nombre: 'Repartidor 1',
-        telefono: '',
-        correo: '',
-        idEstado: 0,
+    console.log(this.navParams.get('pedido'));
+    this.pedido = this.navParams.get('pedido');
+    this.solicitante = this.navParams.get('solicitante');
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss();
+  }
+
+  async verMapa() {
+    const mapaModal = await this.modalCtrl.create({
+      component: MapaComponent,
+      componentProps: {
+        lat: this.pedido.direccion.latitud,
+        lng: this.pedido.direccion.longitud,
+        lat0: this.pedido.latitud,
+        lng0: this.pedido.longitud,
+        seguimiento: true,
+        solicitante: this.solicitante
       },
-      direccion: {
-        idDireccion: 1,
-        idSolicitante: 1,
-        nombre: 'Direccion principal',
-        direccion: 'Dirección detalle',
-        latitud: 0,
-        longitud: 0,
-        idEstado: 0,
-      },
-      pedidoDetalle: [
-        {
-          idPedido: 1,
-          idPedidoDetalle: 1,
-          detalle: 'Detalle 1',
-          cantidad: '1',
-          idEstado: 1,
-        },
-        {
-          idPedido: 1,
-          idPedidoDetalle: 1,
-          detalle: 'Detalle 2',
-          cantidad: '2',
-          idEstado: 1,
-        },
-        {
-          idPedido: 1,
-          idPedidoDetalle: 1,
-          detalle: 'Detalle 3',
-          cantidad: '3',
-          idEstado: 1,
-        },
-        {
-          idPedido: 1,
-          idPedidoDetalle: 1,
-          detalle: 'Detalle 3',
-          cantidad: '3',
-          idEstado: 1,
-        },
-        {
-          idPedido: 1,
-          idPedidoDetalle: 1,
-          detalle: 'Detalle 3',
-          cantidad: '3',
-          idEstado: 1,
-        },
-      ],
-    };
+    });
+
+    mapaModal.present();
   }
 }

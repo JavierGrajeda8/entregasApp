@@ -33,9 +33,9 @@ export class LoginPage implements OnInit {
       });
   }
   private registro() {
-    this.nav.navigateRoot('login/registro');
+    this.nav.navigateRoot('registro');
   }
   private loginRepartidor() {
-    this.nav.navigateRoot('login/loginRepartidor');
+    this.nav.navigateRoot('loginRepartidor');
   }
 }

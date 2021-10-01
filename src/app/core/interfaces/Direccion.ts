@@ -2,7 +2,7 @@ import { Repartidor } from './Repartidor';
 
 export interface Direccion {
   idDireccion: number;
-  idSolicitante: number;
+  idSolicitante: string;
   latitud: number;
   longitud: number;
   direccion: string;

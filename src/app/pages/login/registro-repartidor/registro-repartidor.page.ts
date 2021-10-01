@@ -3,7 +3,7 @@ import { NavController, NavParams } from '@ionic/angular';
 import { ConstStatus } from 'src/app/core/constants/constStatus';
 import { ConstStrings } from 'src/app/core/constants/constStrings';
 import { Repartidor } from 'src/app/core/interfaces/Repartidor';
-import { RepartidorService } from 'src/app/core/services/repartidor/repartidor.service';
+import { RepartidorService } from 'src/app/core/services/registro/registro.service';
 import { StorageService } from 'src/app/shared/services/storage/storage.service';
 import { environment } from 'src/environments/environment.prod';
 
@@ -60,9 +60,9 @@ export class RegistroRepartidorPage implements OnInit {
   }
 
   private login() {
-    this.nav.navigateRoot('login/loginRepartidor');
+    this.nav.navigateRoot('loginRepartidor');
   }
   private registroSolicitante() {
-    this.nav.navigateRoot('login/registro');
+    this.nav.navigateRoot('registro');
   }
 }

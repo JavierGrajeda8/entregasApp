@@ -44,27 +44,7 @@
               </ion-item>
             </ion-col>
           </ion-row>
-          <ion-row>
-            <ion-col size="12">
-              <ion-item lines="none">
-                <ion-label color="primary" position="stacked"
-                  >Detalle de la dirección
-                  ({{data.direccionDetalle.length}}/100):
-                  <ion-text color="danger"> * </ion-text>
-                </ion-label>
-                <ion-textarea
-                  class="ion-text-end"
-                  [(ngModel)]="data.direccionDetalle"
-                  #direccionDetalle="ngModel"
-                  name="direccionDetalle"
-                  id="direccionDetalle"
-                  required
-                  maxlength="100"
-                  placeholder="Ej: 6a calle 9-61 zona 10."
-                ></ion-textarea>
-              </ion-item>
-            </ion-col>
-          </ion-row>
+
           <ion-row>
             <ion-col size="12">
               <ion-item lines="none" (click)="elegirDestino()">
@@ -90,6 +70,27 @@
                   type="hidden"
                   required
                 ></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-item lines="none">
+                <ion-label color="primary" position="stacked"
+                  >Detalle de la dirección destino
+                  ({{data.direccionDetalle.length}}/100):
+                  <ion-text color="danger"> * </ion-text>
+                </ion-label>
+                <ion-textarea
+                  class="ion-text-end"
+                  [(ngModel)]="data.direccionDetalle"
+                  #direccionDetalle="ngModel"
+                  name="direccionDetalle"
+                  id="direccionDetalle"
+                  required
+                  maxlength="100"
+                  placeholder="Ej: 6a calle 9-61 zona 10."
+                ></ion-textarea>
               </ion-item>
             </ion-col>
           </ion-row>
@@ -149,6 +150,11 @@
                 >
                   <ion-select-option value="0"
                     >Asignar automáticamente</ion-select-option
+                  >
+                  <ion-select-option
+                    *ngFor="let repartidor of repartidores"
+                    value="{{repartidor.correo}}"
+                    >{{repartidor.nombre}}</ion-select-option
                   >
                 </ion-select>
               </ion-item>

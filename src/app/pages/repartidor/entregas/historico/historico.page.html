@@ -3,7 +3,7 @@
 <ion-content>
   <ion-list *ngIf="pedidos.length > 0">
     <ion-list-header>
-      <ion-label>Histórico de entregas</ion-label>
+      <ion-label>Entregas pendientes</ion-label>
     </ion-list-header>
     <ion-item-sliding>
       <ion-item (click)="mostrarDetalle(1)">
@@ -34,10 +34,10 @@
     <ion-card-content>
       <ion-text color="dark">
         <p class="info">
-          Parece que no tienes histórico de entregas.
+          Parece que no tienes entregas pendientes.
         </p>
       </ion-text>
     </ion-card-content>
   </ion-card>
- 
+
 </ion-content>

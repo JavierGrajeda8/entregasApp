@@ -4,10 +4,16 @@ import { AuthService } from '../auth/auth.service';
 import { StorageService } from 'src/app/shared/services/storage/storage.service';
 import { ConstStrings } from '../../constants/constStrings';
 import {
+  Action,
   AngularFirestore,
   AngularFirestoreDocument,
+  DocumentChangeAction,
+  DocumentSnapshot,
 } from '@angular/fire/compat/firestore';
 import { Direccion } from '../../interfaces/Direccion';
+import { Pedido } from '../../interfaces/Pedido';
+import { ConstStatus } from '../../constants/constStatus';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -35,26 +41,6 @@ export class SolicitanteService {
             .catch((error) => {
               reject(error);
             });
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }
-
-  private get(correo) {
-    return new Promise((resolve, reject) => {
-      this.firestore
-        .collection('solicitante')
-        .doc(correo)
-        .get()
-        .toPromise()
-        .then((user) => {
-          if (user.exists) {
-            resolve(user);
-          } else {
-            reject('No se encontró el usuario en firebase');
-          }
         })
         .catch((error) => {
           reject(error);
@@ -113,8 +99,69 @@ export class SolicitanteService {
           .collection('solicitante')
           .doc(correo)
           .collection('direccion')
-          .get().toPromise()
+          .get()
+          .toPromise()
       );
+    });
+  }
+
+  getpedidosHistorico(idSolicitante) {
+    return this.firestore
+      .collection('solicitante')
+      .doc(idSolicitante)
+      .collection('pedido', (ref) =>
+        ref
+          .where('idEstado', '==', ConstStatus.pedidoEntregado)
+      )
+      .valueChanges();
+  }
+
+  getPedidosPendientes(idSolicitante) {
+    return this.firestore
+      .collection('solicitante')
+      .doc(idSolicitante)
+      .collection('pedido', (ref) =>
+        ref
+          .where('idEstado', '>=', ConstStatus.pedidoRealizado)
+          .where('idEstado', '<=', ConstStatus.pedidoEnTransito)
+      )
+      .valueChanges();
+  }
+
+  guardarPedido(pedido: Pedido) {
+    return new Promise((resolve, reject) => {
+      this.firestore
+        .collection('solicitante')
+        .doc(pedido.idSolicitante)
+        .collection('pedido')
+        .doc(pedido.idPedido.toString())
+        .set(pedido)
+        .then(() => {
+          resolve('');
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  private get(correo) {
+    return new Promise((resolve, reject) => {
+      this.firestore
+        .collection('solicitante')
+        .doc(correo)
+        .get()
+        .toPromise()
+        .then((user) => {
+          if (user.exists) {
+            resolve(user);
+          } else {
+            reject('No se encontró el usuario en firebase');
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, NavController, NavParams } from '@ionic/angular';
 import { MapaComponent } from 'src/app/core/components/mapa/mapa.component';
 import { ConstStatus } from 'src/app/core/constants/constStatus';
@@ -30,7 +31,8 @@ export class GestionarPage implements OnInit {
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private storage: StorageService,
-    private solicitanteService: SolicitanteService
+    private solicitanteService: SolicitanteService,
+    private route: ActivatedRoute
   ) {
     if (this.navParams.get('IdDireccion')) {
       this.data.idDireccion = this.navParams.get('IdDireccion');
@@ -43,6 +45,17 @@ export class GestionarPage implements OnInit {
       .then((solicitante: string) => {
         this.solicitante = JSON.parse(solicitante) as Solicitante;
       });
+    this.route.queryParams.subscribe((params) => {
+      console.log('params', params);
+      if (params.editar) {
+        this.data.direccion = params.direccion;
+        this.data.latitud = params.latitud;
+        this.data.longitud = params.longitud;
+        this.data.nombre = params.nombre;
+        this.data.idDireccion = params.idDireccion;
+        this.data.origen = this.data.latitud + ',' + this.data.longitud;
+      }
+    });
   }
 
   async elegirDestino() {
@@ -54,11 +67,12 @@ export class GestionarPage implements OnInit {
     }
     const mapaModal = await this.modalCtrl.create({
       component: MapaComponent,
-      componentProps: { lat, lng },
+      componentProps: { lat, lng, seguimiento: false, solicitante: true },
     });
     mapaModal.onDidDismiss().then((data) => {
       if (data.data) {
         console.log(data);
+        this.data.origen = data.data.latitud + ',' + data.data.longitud;
         this.data.latitud = parseFloat(data.data.latitud).toFixed(6).toString();
         this.data.longitud = parseFloat(data.data.longitud)
           .toFixed(6)

@@ -43,7 +43,7 @@ export class RegistroPage implements OnInit {
       password: this.data.password,
       idEstado: ConstStatus.activo,
       telefono: this.data.telefono,
-      idSolicitante: Date.now(),
+      idSolicitante: this.data.correo,
     };
     this.solicitanteService
       .registrar(solicitante)
@@ -55,9 +55,9 @@ export class RegistroPage implements OnInit {
       });
   }
   private login() {
-    this.nav.navigateRoot('login');
+    this.nav.navigateRoot('');
   }
   private registroRepartidor() {
-    this.nav.navigateRoot('login/registroRepartidor');
+    this.nav.navigateRoot('registroRepartidor');
   }
 }

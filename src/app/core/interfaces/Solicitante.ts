@@ -1,7 +1,7 @@
 import { Direccion } from './Direccion';
 
 export interface Solicitante {
-    idSolicitante: number;
+    idSolicitante: string;
     nombre: string;
     telefono: number;
     correo: string;

@@ -7,8 +7,14 @@ import {
 import { now } from 'moment';
 import { MapaComponent } from 'src/app/core/components/mapa/mapa.component';
 import { ConstStatus } from 'src/app/core/constants/constStatus';
+import { ConstStrings } from 'src/app/core/constants/constStrings';
 import { Direccion } from 'src/app/core/interfaces/Direccion';
 import { Pedido } from 'src/app/core/interfaces/Pedido';
+import { Repartidor } from 'src/app/core/interfaces/Repartidor';
+import { Solicitante } from 'src/app/core/interfaces/Solicitante';
+import { RepartidorService } from 'src/app/core/services/registro/registro.service';
+import { SolicitanteService } from 'src/app/core/services/solicitante/solicitante.service';
+import { StorageService } from 'src/app/shared/services/storage/storage.service';
 
 @Component({
   selector: 'app-crear',
@@ -19,11 +25,12 @@ export class CrearPage implements OnInit {
   public availableDateMin;
   public availableDateMax;
   public data = {
+    idPedido: null,
     direccion: null,
-    direccionDetalle: '',
+    direccionDetalle: '6a calle 9-61',
     destino: null,
     fechaEntrega: '',
-    descripcion: '',
+    descripcion: 'Exámenes médicos Javier Grajeda',
     costo: null,
     distancia: null,
     comentarios: '',
@@ -32,19 +39,26 @@ export class CrearPage implements OnInit {
       { detalle: 'Caja de zapatos', cantidad: '1', id: '1632378600000' },
     ],
   };
+  public cargando = false;
+  public solicitante: Solicitante;
 
   private direcciones: Direccion[] = [];
+  private repartidores: Repartidor[] = [];
   private costoPorKilometro = 10.0;
 
   constructor(
     private alertController: AlertController,
     private modalCtrl: ModalController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private storage: StorageService,
+    private solicitanteService: SolicitanteService,
+    private repartidorService: RepartidorService
   ) {}
 
   ngOnInit() {
     this.setDates();
     this.cargarDirecciones();
+    this.cargarRepartidores();
   }
 
   async agregarDetalle() {
@@ -144,7 +158,7 @@ export class CrearPage implements OnInit {
     }
     const mapaModal = await this.modalCtrl.create({
       component: MapaComponent,
-      componentProps: { lat, lng },
+      componentProps: { lat, lng, seguimiento: false, solicitante: true },
     });
     mapaModal.onDidDismiss().then((data) => {
       if (data.data) {
@@ -159,33 +173,65 @@ export class CrearPage implements OnInit {
     mapaModal.present();
   }
 
-  private cargarDirecciones() {
-    /*
-      PRUEBAS ELIMINAR
-    */
-    this.direcciones.push({
-      idDireccion: 1,
-      idSolicitante: null,
-      latitud: 14.586966584775903,
-      longitud: -90.50186538045654,
-      direccion: '6a calle 9-61',
-      nombre: 'Casa Principal',
-      tipo: null,
-      idEstado: null,
-    });
+  private cargarRepartidores() {
+    this.repartidores = [];
+    this.repartidorService
+      .getAll()
+      .then((repartidores: any) => {
+        repartidores.forEach((repartidor) => {
+          this.repartidores.push(repartidor.data() as Repartidor);
+        });
+        console.log('repartidores', this.repartidores);
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  }
 
-    /*
-      PRUEBAS ELIMINAR
-    */
+  private cargarDirecciones() {
+    this.cargando = true;
+    this.direcciones = [];
+    this.storage
+      .get(ConstStrings.str.storage.solicitante)
+      .then((solicitante: string) => {
+        this.solicitante = JSON.parse(solicitante) as Solicitante;
+        this.solicitanteService
+          .getDireccion(this.solicitante.correo)
+          .then((direcciones: any) => {
+            this.cargando = false;
+            if (direcciones.size > 0) {
+              direcciones.docs.forEach((direccion) => {
+                const dir: Direccion = direccion.data();
+                if (dir.idEstado === ConstStatus.activo) {
+                  this.direcciones.push(direccion.data());
+                }
+              });
+              console.log('direcciones', this.direcciones);
+            }
+          })
+          .catch((error) => {
+            this.cargando = false;
+          });
+      });
   }
 
   private guardarPedido() {
-    console.log(this.data);
+    if (!this.data.idPedido) {
+      this.data.idPedido = Date.now();
+    }
+    const direccion = this.direcciones.filter(
+      (r) => r.idDireccion === parseInt(this.data.direccion, 10)
+    );
+
+    const repartidor = this.repartidores.filter(
+      (r) => r.correo === this.data.repartidor
+    );
+    console.log('repartidor', repartidor);
 
     const pedido: Pedido = {
-      idPedido: now(),
-      idRepartidor: parseInt(this.data.repartidor, 10),
-      idSolicitante: 0,
+      idPedido: this.data.idPedido,
+      idRepartidor: this.data.repartidor,
+      idSolicitante: this.solicitante.correo,
       direccionDetalle: this.data.direccionDetalle,
       descripcion: this.data.descripcion,
       comentarios: this.data.comentarios,
@@ -194,6 +240,8 @@ export class CrearPage implements OnInit {
       longitud: parseFloat(this.data.destino.split(',')[1]),
       idEstado: ConstStatus.pedidoRealizado,
       pedidoDetalle: [],
+      repartidor: repartidor[0],
+      direccion: direccion[0],
     };
 
     this.data.detalle.forEach((d) => {
@@ -206,6 +254,14 @@ export class CrearPage implements OnInit {
       });
     });
     console.log('Información a grabar', pedido);
+
+    this.solicitanteService.guardarPedido(pedido).then(() => {
+      this.repartidorService.guardarEntrega(pedido).then(() => {
+        this.navCtrl.pop().then(() => {
+          this.navCtrl.navigateForward('solicitante/pedidos/pendientes');
+        });
+      });
+    });
   }
 
   private calcularCosto() {

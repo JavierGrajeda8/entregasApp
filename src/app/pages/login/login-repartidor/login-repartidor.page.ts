@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { RepartidorService } from 'src/app/core/services/repartidor/repartidor.service';
+import { RepartidorService } from 'src/app/core/services/registro/registro.service';
 
 @Component({
   selector: 'app-login-repartidor',
@@ -24,7 +24,7 @@ export class LoginRepartidorPage implements OnInit {
     this.repartidorService
       .login(this.data.correo, this.data.password)
       .then((usuario: any) => {
-        this.nav.navigateRoot('solicitante');
+        this.nav.navigateRoot('repartidor');
         console.log('usuario', usuario.data());
       })
       .catch((error) => {
@@ -33,9 +33,9 @@ export class LoginRepartidorPage implements OnInit {
       });
   }
   private registro() {
-    this.nav.navigateRoot('login/registroRepartidor');
+    this.nav.navigateRoot('registroRepartidor');
   }
   private loginSolicitante() {
-    this.nav.navigateRoot('login');
+    this.nav.navigateRoot('');
   }
 }

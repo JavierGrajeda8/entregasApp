@@ -5,8 +5,8 @@ import { Solicitante } from './Solicitante';
 
 export interface Pedido {
   idPedido: number;
-  idRepartidor: number;
-  idSolicitante: number;
+  idRepartidor: string;
+  idSolicitante: string;
   direccionDetalle: string;
   descripcion: string;
   comentarios: string;
