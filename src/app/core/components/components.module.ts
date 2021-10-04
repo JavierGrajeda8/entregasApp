@@ -9,16 +9,19 @@ import { HeaderComponent } from './common/header/header.component';
 import { StatusComponent } from './common/status/status.component';
 import { StatusPipe } from 'src/app/shared/pipes/status/status.pipe';
 import { NextStepPipe } from 'src/app/shared/pipes/next-step/next-step.pipe';
+import { PedidoHistorialComponent } from './pedido-historial/pedido-historial.component';
+import { Network } from '@ionic-native/network';
 
 @NgModule({
   declarations: [
     MapaComponent,
     ResenaComponent,
     PedidoDetalleComponent,
+    PedidoHistorialComponent,
     HeaderComponent,
     StatusComponent,
     StatusPipe,
-    NextStepPipe
+    NextStepPipe,
   ],
   imports: [IonicModule, CommonModule, FormsModule],
   exports: [
@@ -28,7 +31,8 @@ import { NextStepPipe } from 'src/app/shared/pipes/next-step/next-step.pipe';
     HeaderComponent,
     StatusComponent,
     StatusPipe,
-    NextStepPipe
+    NextStepPipe,
   ],
+  providers: [Network]
 })
 export class ComponentsModule {}

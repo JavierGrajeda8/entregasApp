@@ -6,7 +6,11 @@ import {
   ModalController,
   NavParams,
 } from '@ionic/angular';
+import { ConstStatus } from '../../constants/constStatus';
+import { Pedido } from '../../interfaces/Pedido';
+import { Repartidor } from '../../interfaces/Repartidor';
 import { ConnectivityServiceProvider } from '../../services/connectivity-service/connectivity-service';
+import { SolicitanteService } from '../../services/solicitante/solicitante.service';
 
 declare let google;
 
@@ -33,6 +37,7 @@ export class MapaComponent implements OnInit {
   private seguimiento = false;
   private solicitante = true;
   private loading: any;
+  private pedido: Pedido;
 
   constructor(
     private geolocation: Geolocation,
@@ -40,7 +45,8 @@ export class MapaComponent implements OnInit {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private modalCtrl: ModalController,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private solicitanteService: SolicitanteService
   ) {}
 
   ngOnInit() {
@@ -49,6 +55,7 @@ export class MapaComponent implements OnInit {
     this.lng = parseFloat(this.navParams.get('lng'));
     this.lat0 = parseFloat(this.navParams.get('lat0'));
     this.lng0 = parseFloat(this.navParams.get('lng0'));
+    this.pedido = this.navParams.get('pedido');
     this.seguimiento = this.navParams.get('seguimiento');
     this.solicitante = this.navParams.get('solicitante');
     console.log('lat', this.lat);
@@ -155,7 +162,10 @@ export class MapaComponent implements OnInit {
   private initMap() {
     console.log('initMap');
     this.mapInitialised = true;
-    if (this.seguimiento && this.solicitante || this.seguimiento && !this.solicitante) {
+    if (
+      (this.seguimiento && this.solicitante) ||
+      (this.seguimiento && !this.solicitante)
+    ) {
       setTimeout(() => {
         this.seguimientoPedido();
       }, 1500);
@@ -191,11 +201,78 @@ export class MapaComponent implements OnInit {
     console.log('this.map center lat', this.map.center.lat());
     console.log('this.map center lng', this.map.center.lng());
     this.myCoordinates = new google.maps.LatLng(this.lat, this.lng);
-    this.addMarker(this.myCoordinates, '', true, false);
+    this.addMarker(this.myCoordinates, '', true, true, false);
     this.myCoordinates = new google.maps.LatLng(this.lat0, this.lng0);
-    this.addMarker(this.myCoordinates, '', true, false);
-
+    this.addMarker(this.myCoordinates, '', true, false, false);
+    if (
+      this.pedido.idEstado === ConstStatus.pedidoEsperando ||
+      this.pedido.idEstado === ConstStatus.pedidoPorRecoger ||
+      this.pedido.idEstado === ConstStatus.pedidoEnTransito
+    ) {
+      if (this.seguimiento && !this.solicitante) {
+        this.guardarUbicacionRepartidor();
+      } else if (this.seguimiento && this.solicitante) {
+        this.obtenerUbicacionRepartidor();
+      }
+    }
     this.dismissLoader();
+  }
+
+  private obtenerUbicacionRepartidor() {
+    this.solicitanteService
+      .obtenerUbicacionRepartidor(this.pedido.idRepartidor)
+      .subscribe((repartidor: Repartidor) => {
+        console.log('repartidor', repartidor);
+        this.myCoordinates = new google.maps.LatLng(
+          repartidor.latitud,
+          repartidor.longitud
+        );
+        console.log('this.markers.length', this.markers.length);
+        if (this.markers.length === 3) {
+          this.markers[2].setPosition(this.myCoordinates);
+        } else {
+          this.addMarker(this.myCoordinates, '', false, false, true);
+        }
+      });
+  }
+
+  private guardarUbicacionRepartidor() {
+    setInterval(() => {
+      const GPS_OPTIONS = { timeout: 10000 };
+      this.geolocation.getCurrentPosition(GPS_OPTIONS).then(
+        (position) => {
+          this.position = position;
+          console.log('lat repartidor', this.lat);
+          console.log('lng repartidor', this.lng);
+          this.myCoordinates = new google.maps.LatLng(this.lat, this.lng);
+          if (this.markers.length === 3) {
+            this.markers[2].setPosition(this.myCoordinates);
+          } else {
+            this.addMarker(this.myCoordinates, '', false, false, true);
+          }
+          this.solicitanteService.guardarUbicacionRepartidor(
+            this.pedido.idRepartidor,
+            this.lat,
+            this.lng
+          );
+        },
+        (error) => {
+          if (this.lat > 0 && this.lng > 0) {
+            this.myCoordinates = new google.maps.LatLng(this.lat, this.lng);
+          } else {
+            this.myCoordinates = new google.maps.LatLng(
+              14.5973312,
+              -90.5246463
+            );
+          }
+          this.setGeoPoints();
+          this.showMessage(
+            'Señal de GPS baja, verifica si tienes encendido tu GPS.',
+            'Aviso'
+          );
+        }
+      );
+    }, 10000);
   }
 
   private addConnectivityListeners() {
@@ -297,7 +374,8 @@ export class MapaComponent implements OnInit {
     latLng: any,
     item: any,
     soyYo: boolean,
-    isTomaTurno?: boolean
+    esOrigen?: boolean,
+    esRepartidor?: boolean
   ) {
     const image = {
       url: 'assets/img/ubicaciones/ubicacion1.png',
@@ -317,6 +395,15 @@ export class MapaComponent implements OnInit {
       // The anchor for this image is the base of the flagpole at (0, 32).
       anchor: new google.maps.Point(0, 32),
     };
+    const imageR = {
+      url: 'assets/img/ubicaciones/repartidor.png',
+      // This marker is 20 pixels wide by 32 pixels high.
+      size: new google.maps.Size(50, 50),
+      // The origin for this image is (0, 0).
+      origin: new google.maps.Point(0, 0),
+      // The anchor for this image is the base of the flagpole at (0, 32).
+      anchor: new google.maps.Point(0, 32),
+    };
 
     const marker = new google.maps.Marker({
       map: this.map,
@@ -326,19 +413,8 @@ export class MapaComponent implements OnInit {
     });
 
     if (soyYo) {
-      /*let circle = new google.maps.Circle({
-       map: this.map,
-       radius: 500,
-       strokeColor: '#90caf9',
-       strokeOpacity: 0.4,
-       strokeWeight: 2,
-       fillColor: '#bbdefb',
-       fillOpacity: 0.35
-       });
-       circle.bindTo('center', marker, 'position');*/
-      // marker.icon = 'assets/img/hola.png'
     } else {
-      marker.icon = isTomaTurno ? image2 : image;
+      marker.icon = esOrigen ? image2 : esRepartidor ? imageR : image;
     }
 
     this.markers.push(marker);

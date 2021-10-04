@@ -266,6 +266,15 @@ export class CrearPage implements OnInit {
       longitud: parseFloat(this.data.destino.split(',')[1]),
       idEstado: ConstStatus.pedidoRealizado,
       pedidoDetalle: [],
+      historico: [
+        {
+          idPedido: this.data.idPedido,
+          idHistorico: Date.now(),
+          idEstado: ConstStatus.pedidoRealizado,
+          fechaHora: Date.now(),
+          comentarios: '',
+        },
+      ],
       repartidor,
       direccion,
     };

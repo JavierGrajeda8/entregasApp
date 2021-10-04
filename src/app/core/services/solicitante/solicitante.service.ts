@@ -125,8 +125,7 @@ export class SolicitanteService {
       .collection('solicitante')
       .doc(idSolicitante)
       .collection('pedido', (ref) =>
-        ref
-          .where('idEstado', '==', ConstStatus.pedidoEntregado)
+        ref.where('idEstado', '==', ConstStatus.pedidoEntregado)
       )
       .valueChanges();
   }
@@ -158,6 +157,20 @@ export class SolicitanteService {
           reject(error);
         });
     });
+  }
+
+  guardarUbicacionRepartidor(idRepartidor, latitud, longitud) {
+    return this.firestore
+      .collection('repartidor')
+      .doc(idRepartidor)
+      .update({ latitud, longitud });
+  }
+
+  obtenerUbicacionRepartidor(idRepartidor) {
+    return this.firestore
+      .collection('repartidor')
+      .doc(idRepartidor)
+      .valueChanges();
   }
 
   private get(correo) {

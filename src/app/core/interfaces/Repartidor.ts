@@ -7,6 +7,8 @@ export interface Repartidor {
   telefono: string;
   idEstado: number;
   password?: string;
+  latitud?: number;
+  longitud?: number;
   cantidadEntregas?: number;
   reseñas?: RepartidorResena[];
 }

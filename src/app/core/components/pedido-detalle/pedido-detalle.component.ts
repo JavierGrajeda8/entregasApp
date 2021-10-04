@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Pedido } from '../../interfaces/Pedido';
 import { MapaComponent } from '../mapa/mapa.component';
+import { PedidoHistorialComponent } from '../pedido-historial/pedido-historial.component';
 
 @Component({
   selector: 'app-pedido-detalle',
@@ -16,15 +17,19 @@ export class PedidoDetalleComponent implements OnInit {
     private modalCtrl: ModalController
   ) {}
 
-  ngOnInit() {
-    console.log(this.navParams.get('pedido'));
-    this.pedido = this.navParams.get('pedido');
-    this.solicitante = this.navParams.get('solicitante');
-  }
+  ngOnInit() {}
 
   dismiss() {
     this.modalCtrl.dismiss();
   }
+
+  ionViewWillEnter() {
+    this.pedido = this.navParams.get('pedido');
+    this.solicitante = this.navParams.get('solicitante');
+    console.log('solicitante', this.navParams.get('solicitante'));
+  }
+
+  ionViewWillLeave() {}
 
   async verMapa() {
     const mapaModal = await this.modalCtrl.create({
@@ -35,7 +40,19 @@ export class PedidoDetalleComponent implements OnInit {
         lat0: this.pedido.latitud,
         lng0: this.pedido.longitud,
         seguimiento: true,
-        solicitante: this.solicitante
+        solicitante: this.solicitante,
+        pedido: this.pedido,
+      },
+    });
+
+    mapaModal.present();
+  }
+
+  async verHistorial() {
+    const mapaModal = await this.modalCtrl.create({
+      component: PedidoHistorialComponent,
+      componentProps: {
+        pedido: this.pedido,
       },
     });
 

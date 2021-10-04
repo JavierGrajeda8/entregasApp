@@ -11,7 +11,7 @@
       <ion-label>
         <ion-text color="dark">
           <h1>
-            Detalle de pedido
+            Detalle de pedido <br />
             <ion-text color="primary">
               {{ pedido.idPedido }}
             </ion-text>
@@ -22,7 +22,12 @@
     <ion-item-divider>
       <ion-label>
         <ion-text class="ion-text-wrap">
-          <h2>{{ pedido.idEstado | status: true }}</h2>
+          <h2>
+            Estado actual: <br />
+            <ion-text color="secondary">
+              <h2>{{ pedido.idEstado | status: solicitante }}</h2>
+            </ion-text>
+          </h2>
         </ion-text></ion-label
       >
     </ion-item-divider>
@@ -36,7 +41,7 @@
       </ion-grid>
     </ion-item>
     <ion-item lines="none">
-      <ion-label (click)="verHitoria()" slot="end"
+      <ion-label (click)="verHistorial()" slot="end"
         ><ion-text color="secondary">
           <h3>Historial</h3>
         </ion-text></ion-label

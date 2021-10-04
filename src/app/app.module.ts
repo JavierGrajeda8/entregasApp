@@ -13,6 +13,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { IonicStorageModule } from '@ionic/storage';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,8 +34,10 @@ import { IonicStorageModule } from '@ionic/storage';
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Network,
-    Storage
+    Storage,
+    Geolocation
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
+
 })
 export class AppModule {}

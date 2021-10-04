@@ -1,0 +1,54 @@
+<div
+  style="
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 30px;
+    overflow-y: scroll;
+  "
+>
+  <ion-list>
+    <ion-list-header>
+      <ion-label>
+        <ion-text color="dark">
+          <h1>
+            Detalle de pedido <br />
+            <ion-text color="primary">
+              {{ pedido.idPedido }}
+            </ion-text>
+          </h1>
+        </ion-text>
+      </ion-label>
+    </ion-list-header>
+    <ion-item-divider>
+      <ion-label>
+        <ion-text class="ion-text-wrap">
+          <h2>
+            Estado actual: <br />
+            <ion-text color="secondary">
+              <h2>{{ pedido.idEstado | status: solicitante }}</h2>
+            </ion-text>
+          </h2>
+        </ion-text></ion-label
+      >
+    </ion-item-divider>
+
+    <ion-item lines="none" *ngFor="let historia of pedido.historico">
+      <ion-label color="medium" slot="start" class="ion-text-wrap">{{
+        historia.idEstado | status: solicitante
+      }}</ion-label>
+      <ion-label color="dark" slot="end" class="ion-text-wrap ion-text-end">
+        {{ historia.fechaHora | date: "dd/MM/yy hh:mm a" }} <br />
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</div>
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="danger">
+        <ion-icon slot="end" name="close-circle"></ion-icon>
+        Cerrar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
