@@ -143,6 +143,11 @@ export class SolicitanteService {
   }
 
   guardarPedido(pedido: Pedido) {
+    this.firestore
+      .collection('pedidos')
+      .doc(pedido.idPedido.toString())
+      .set(pedido);
+
     return new Promise((resolve, reject) => {
       this.firestore
         .collection('solicitante')
