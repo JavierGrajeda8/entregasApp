@@ -10,7 +10,6 @@ import { StatusComponent } from './common/status/status.component';
 import { StatusPipe } from 'src/app/shared/pipes/status/status.pipe';
 import { NextStepPipe } from 'src/app/shared/pipes/next-step/next-step.pipe';
 import { PedidoHistorialComponent } from './pedido-historial/pedido-historial.component';
-import { Network } from '@ionic-native/network';
 
 @NgModule({
   declarations: [
@@ -33,6 +32,5 @@ import { Network } from '@ionic-native/network';
     StatusPipe,
     NextStepPipe,
   ],
-  providers: [Network]
 })
 export class ComponentsModule {}
