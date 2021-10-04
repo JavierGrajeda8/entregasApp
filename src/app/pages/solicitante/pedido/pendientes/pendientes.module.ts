@@ -10,7 +10,7 @@ import { PendientesPage } from './pendientes.page';
 import { ComponentsModule } from 'src/app/core/components/components.module';
 import { PedidoDetalleComponent } from 'src/app/core/components/pedido-detalle/pedido-detalle.component';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { Network } from '@ionic-native/network';
+import { Network } from '@ionic-native/network/ngx';
 
 @NgModule({
   imports: [
