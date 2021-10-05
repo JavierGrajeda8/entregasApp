@@ -38,6 +38,7 @@ export class CrearPage implements OnInit {
     repartidor: '',
     repartidorAux: '',
     detalle: [],
+    costoPorKilometro: null
   };
   public cargando = false;
   public solicitante: Solicitante;
@@ -60,6 +61,22 @@ export class CrearPage implements OnInit {
     this.setDates();
     this.cargarDirecciones();
     this.cargarRepartidores();
+    this.solicitanteService
+      .obtenerCostoPorKilometro()
+      .toPromise()
+      .then((costo: any) => {
+        console.log('costo', costo);
+
+        if (costo.exists) {
+          try {
+            console.log('costo por  kilometro', costo.data());
+            this.costoPorKilometro = costo.data().valor;
+          } catch (error) {
+            this.costoPorKilometro = 10;
+          }
+          this.data.costoPorKilometro = this.costoPorKilometro.toFixed(2);
+        }
+      });
   }
 
   async agregarDetalle() {
@@ -326,6 +343,7 @@ export class CrearPage implements OnInit {
           direccionDestino.longitud
         );
         this.data.distancia = distancia.toFixed(2);
+        console.log(this.costoPorKilometro);
         this.data.costo = (distancia * this.costoPorKilometro).toFixed(2);
         console.log('distancia', this.direcciones);
 

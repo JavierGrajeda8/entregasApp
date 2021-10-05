@@ -25,6 +25,13 @@ export class SolicitanteService {
     private storage: StorageService
   ) {}
 
+  obtenerCostoPorKilometro() {
+    return this.firestore
+      .collection('parametros')
+      .doc('precioPorKilometro')
+      .get();
+  }
+
   guardarPerfil(solicitante: Solicitante) {
     return new Promise((resolve, reject) => {
       this.firestore
