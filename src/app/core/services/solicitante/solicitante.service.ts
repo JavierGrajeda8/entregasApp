@@ -48,12 +48,15 @@ export class SolicitanteService {
   }
 
   login(correo, password) {
+    console.log('correo', correo);
+    console.log('password', password);
     return new Promise((resolve, reject) => {
       this.auth
         .loginWithEmailPassword(correo, password)
         .then((data) => {
           this.get(correo)
             .then((user: any) => {
+              console.log('user', user);
               this.storage.set(
                 ConstStrings.str.storage.solicitante,
                 JSON.stringify(user.data())
@@ -61,10 +64,12 @@ export class SolicitanteService {
               resolve(user);
             })
             .catch((error) => {
+              console.log('error login 1', error);
               reject(error);
             });
         })
         .catch((error) => {
+          console.log('error login', error);
           reject(error);
         });
     });
