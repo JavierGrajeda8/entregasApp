@@ -54,6 +54,7 @@ export class SolicitanteService {
       this.auth
         .loginWithEmailPassword(correo, password)
         .then((data) => {
+          console.log('data LOGIN', data);
           this.get(correo)
             .then((user: any) => {
               console.log('user', user);
@@ -198,6 +199,7 @@ export class SolicitanteService {
         .get()
         .toPromise()
         .then((user) => {
+          console.log('user get', user);
           if (user.exists) {
             resolve(user);
           } else {
@@ -205,6 +207,7 @@ export class SolicitanteService {
           }
         })
         .catch((error) => {
+          console.log('error get', error);
           reject(error);
         });
     });
