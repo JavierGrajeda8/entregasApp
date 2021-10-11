@@ -39,6 +39,7 @@ export class HistoricoPage implements OnInit {
   async resena(pedido: Pedido) {
     const detalle = await this.modalCtrl.create({
       component: ResenaComponent,
+      componentProps: {editando: true}
     });
 
     detalle.onDidDismiss().then((data) => {
