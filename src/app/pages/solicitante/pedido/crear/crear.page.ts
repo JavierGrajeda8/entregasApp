@@ -13,6 +13,7 @@ import { Direccion } from 'src/app/core/interfaces/Direccion';
 import { Pedido } from 'src/app/core/interfaces/Pedido';
 import { Repartidor } from 'src/app/core/interfaces/Repartidor';
 import { Solicitante } from 'src/app/core/interfaces/Solicitante';
+import { MailerService } from 'src/app/core/services/mailer/mailer.service';
 import { RepartidorService } from 'src/app/core/services/registro/registro.service';
 import { SolicitanteService } from 'src/app/core/services/solicitante/solicitante.service';
 import { StorageService } from 'src/app/shared/services/storage/storage.service';
@@ -54,7 +55,8 @@ export class CrearPage implements OnInit {
     private storage: StorageService,
     private solicitanteService: SolicitanteService,
     private repartidorService: RepartidorService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private mailerService: MailerService
   ) {}
 
   ngOnInit() {
@@ -309,6 +311,7 @@ export class CrearPage implements OnInit {
 
     this.solicitanteService.guardarPedido(pedido).then(() => {
       this.repartidorService.guardarEntrega(pedido).then(() => {
+        this.mailerService.nuevoPedido(pedido, repartidor, this.solicitante);
         this.navCtrl.pop().then(async () => {
           const toast = await this.toastController.create({
             header: 'Pedido creado',

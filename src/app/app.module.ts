@@ -14,6 +14,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { IonicStorageModule } from '@ionic/storage';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,8 +29,8 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
     IonicStorageModule.forRoot({
       name: '_EntregasAppDB',
          driverOrder: ['indexeddb', 'sqlite', 'websql']
-    })
-
+    }),
+    HttpClientModule
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

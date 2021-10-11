@@ -23,6 +23,8 @@ export const environment = {
   ),
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ReExInteger: new RegExp(/^(0|[1-9]\d*)?/),
+  mailerURL: 'https://jgrajeda-api.herokuapp.com/mailer',
+
 };
 
 /*
