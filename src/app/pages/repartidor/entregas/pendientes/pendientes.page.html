@@ -38,7 +38,7 @@
         <ion-item-option
           color="danger"
           *ngIf="pedido.idEstado === 3"
-          (click)="cancelar()"
+          (click)="cancelar(pedido)"
           >Cancelar</ion-item-option
         >
       </ion-item-options>
