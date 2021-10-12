@@ -1,11 +1,54 @@
 import { Injectable } from '@angular/core';
 import { ConstStatus } from '../../constants/constStatus';
+import { ConstStrings } from '../../constants/constStrings';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
   constructor() {}
+
+  public getActionExplicit(idEstado, solicitante: boolean = true) {
+    let respuesta = '';
+    switch (idEstado) {
+      case ConstStatus.pedidoRealizado:
+        respuesta = solicitante
+          ? ConstStrings.str.messagesSolicitante.pedidoRealizado
+          : ConstStrings.str.messagesRepartidor.pedidoRealizado;
+        break;
+      case ConstStatus.pedidoConfirmado:
+        respuesta = solicitante
+          ? ConstStrings.str.messagesSolicitante.pedidoConfirmado
+          : ConstStrings.str.messagesRepartidor.pedidoConfirmado;
+        break;
+      case ConstStatus.pedidoPorRecoger:
+        respuesta = solicitante
+          ? ConstStrings.str.messagesSolicitante.pedidoPorRecoger
+          : ConstStrings.str.messagesRepartidor.pedidoPorRecoger;
+        break;
+      case ConstStatus.pedidoEsperando:
+        respuesta = solicitante
+          ? ConstStrings.str.messagesSolicitante.pedidoEsperando
+          : ConstStrings.str.messagesRepartidor.pedidoEsperando;
+        break;
+      case ConstStatus.pedidoEnTransito:
+        respuesta = solicitante
+          ? ConstStrings.str.messagesSolicitante.pedidoEnTransito
+          : ConstStrings.str.messagesRepartidor.pedidoEnTransito;
+        break;
+      case ConstStatus.pedidoEntregado:
+        respuesta = solicitante
+          ? ConstStrings.str.messagesSolicitante.pedidoEntregado
+          : ConstStrings.str.messagesRepartidor.pedidoEntregado;
+        break;
+      default:
+        respuesta = 'Pedido realizado';
+        break;
+    }
+    console.log('getActionExplicit', {idEstado, solicitante, respuesta});
+
+    return respuesta;
+  }
   public getAction(idEstado) {
     let respuesta = '';
     switch (idEstado) {

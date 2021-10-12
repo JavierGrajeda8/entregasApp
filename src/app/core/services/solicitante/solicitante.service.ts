@@ -137,8 +137,11 @@ export class SolicitanteService {
     return this.firestore
       .collection('solicitante')
       .doc(idSolicitante)
-      .collection('pedido', (ref) =>
-        ref.where('idEstado', '==', ConstStatus.pedidoEntregado)
+      .collection(
+        'pedido',
+        (ref) =>
+          ref.where('idEstado', '==', ConstStatus.pedidoEntregado) ||
+          ref.where('idEstado', '==', ConstStatus.pedidoCancelado)
       )
       .valueChanges();
   }
@@ -191,7 +194,7 @@ export class SolicitanteService {
       .valueChanges();
   }
 
-  private get(correo) {
+  get(correo) {
     return new Promise((resolve, reject) => {
       this.firestore
         .collection('solicitante')

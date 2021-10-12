@@ -53,6 +53,7 @@ export class PedidoDetalleComponent implements OnInit {
       component: PedidoHistorialComponent,
       componentProps: {
         pedido: this.pedido,
+        solicitante: this.solicitante
       },
     });
 

@@ -60,7 +60,11 @@ export class RepartidorService {
       .set(pedido);
   }
 
-  nextStep(pedido: Pedido, cancelar: boolean, comentarios: string = '') {
+  nextStep(
+    pedido: Pedido,
+    cancelar: boolean,
+    comentarios: string = ''
+  ): number {
     if (cancelar) {
       pedido.idEstado = ConstStatus.pedidoCancelado;
     } else {
@@ -89,6 +93,8 @@ export class RepartidorService {
       .collection('pedido')
       .doc(pedido.idPedido.toString())
       .set(pedido);
+
+    return pedido.idEstado;
   }
 
   registrar(repartidor: Repartidor) {
