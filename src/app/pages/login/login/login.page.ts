@@ -17,12 +17,12 @@ export class LoginPage implements OnInit {
   constructor(
     private nav: NavController,
     private solicianteService: SolicitanteService,
-    private geolocation: Geolocation
-  ) {}
+    private geolocation: Geolocation, 
+  ) { }
 
   ngOnInit() {
     const GPS_OPTIONS = { timeout: 10000 };
-    this.geolocation.getCurrentPosition(GPS_OPTIONS);
+    this.geolocation.getCurrentPosition(GPS_OPTIONS).catch((error) => { console.log('error getCurrentPosition', error) });
   }
 
   private ingresar() {

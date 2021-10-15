@@ -6,7 +6,7 @@ import { ConstStrings } from '../../constants/constStrings';
 import {
   AngularFirestore,
   AngularFirestoreDocument,
-} from '@angular/fire/compat/firestore';
+} from '@angular/fire/firestore';
 import { Repartidor } from '../../interfaces/Repartidor';
 import { Pedido } from '../../interfaces/Pedido';
 import { ConstStatus } from '../../constants/constStatus';

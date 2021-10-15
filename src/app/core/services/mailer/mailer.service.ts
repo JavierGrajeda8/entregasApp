@@ -14,6 +14,18 @@ import { CommonService } from '../common/common.service';
 export class MailerService {
   constructor(protected http: HttpClient, private common: CommonService) {}
 
+  public test() {
+    const mail: Mail = {
+      to: 'javiergrajeda8@gmail.com',
+      subject: 'test',
+      body: 'TEST TEST'
+    }
+    console.log('mail', mail);
+    this.http.post(environment.mailerURL, mail).subscribe((resp) => {
+      console.log(resp);
+    });
+  }
+
   public nuevoPedido(
     pedido: Pedido,
     repartidor: Repartidor,

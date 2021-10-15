@@ -12,7 +12,6 @@ export class HeaderComponent implements OnInit {
   @Input() logged = true;
 
   constructor(private nav: NavController, private alertCtrl: AlertController, private auth: AuthService) {
-    console.log('backbutton', this.backButton);
   }
 
   ngOnInit() {}

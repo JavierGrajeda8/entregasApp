@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { StorageService } from 'src/app/shared/services/storage/storage.service';
 import { ConstStrings } from '../../constants/constStrings';

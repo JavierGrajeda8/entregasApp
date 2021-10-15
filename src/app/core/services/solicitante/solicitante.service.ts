@@ -9,7 +9,7 @@ import {
   AngularFirestoreDocument,
   DocumentChangeAction,
   DocumentSnapshot,
-} from '@angular/fire/compat/firestore';
+} from '@angular/fire/firestore';
 import { Direccion } from '../../interfaces/Direccion';
 import { Pedido } from '../../interfaces/Pedido';
 import { ConstStatus } from '../../constants/constStatus';
@@ -22,8 +22,15 @@ export class SolicitanteService {
   constructor(
     private firestore: AngularFirestore,
     private auth: AuthService,
-    private storage: StorageService
-  ) {}
+    private storage: StorageService,
+  ) { }
+
+  test() {
+    this.firestore.collection('solicitante').valueChanges().subscribe((solicitantes) => {
+      console.log('solicitantes', solicitantes);
+    });
+
+  }
 
   obtenerCostoPorKilometro() {
     return this.firestore
@@ -195,6 +202,7 @@ export class SolicitanteService {
   }
 
   get(correo) {
+
     return new Promise((resolve, reject) => {
       this.firestore
         .collection('solicitante')
